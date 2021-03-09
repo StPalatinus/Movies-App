@@ -2,14 +2,24 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 
 import './movies-list.css';
+import MapiService from '../../services/mapi-service'
 
-class MoviesList extends React.Component {
-  // constructor(props) {
-  //   super(props);
+export default class MoviesList extends React.Component {
+  constructor(props) {
+    super(props);
 
-  // }
+    this.mapiService = new MapiService();
+
+    this.state = {
+      name: "Movie1",
+    }
+  }
 
   render() {
+
+    const movies = this.mapiService.getMovies('https://api.themoviedb.org/3/movie/76341?api_key=82a13cf2a29a7a4cf5cdfa5f53773181&language=ru');
+    console.log(movies);
+    
     return (
       <section className="movies">
           <section className="movies-list">
@@ -22,7 +32,7 @@ class MoviesList extends React.Component {
                       height="281"/>
               </a>
               <div className="movie__description">
-                <h2 className="movie__name">Movie1</h2>
+                <h2 className="movie__name">{this.state.name}</h2>
                 <div className="movie__release-date">Date</div>
                 <div className="movie__genre">
                   <span className="movie__genre--name">Action</span>
@@ -110,4 +120,4 @@ class MoviesList extends React.Component {
   
 // };
 
-export default MoviesList;
+// export default MoviesList;
