@@ -1,0 +1,42 @@
+@font-face {
+  font-family: Inter;
+  src: url(./Fonts/Inter/static/Inter-Regular.ttf);
+  /* font-weight: normal; */
+}
+
+/* @font-face {
+  font-family: Inter;
+  src: url(./Fonts/Inter/static/Inter-Bold.ttf);
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url(./Fonts/Inter/static/Inter-ExtraBold.ttf);
+  font-weight: bolder;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url(./Fonts/Inter/static/Inter-ExtraLight.ttf);
+  font-weight: lighter;
+} */
+
+body {
+  margin: 0;
+  background-color: #e5e5e5;
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  line-height: 22px;
+  font-weight: 400;
+}
+
+#moviesapp {
+  background-color: #fff;
+  width: 1010px;
+  margin: 0 auto;
+}
+
+/* code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+} */
