@@ -20,7 +20,7 @@ class MoviesApp extends React.Component {
 
     this.searchMovie = (movieTosearch) => {
       console.log(movieTosearch);
-      movies = this.mapiService.getMovie();
+      movies = this.mapiService.getMovie(movieTosearch);
       console.log(movies);
     };
 
