@@ -1,15 +1,26 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 import './header.css';
 
 class Header extends React.Component {
-  // constructor(props) {
-  //   super(props);
+  constructor(props) {
+    super(props);
 
-  // }
+    const { searchMovie } = this.props;
+
+    Header.defaultProps = {
+      
+    }
+
+    this.onMovieSearch = (evt) => {
+      evt.preventDefault();
+      searchMovie(evt.target.firstChild.value);
+    }
+  }
 
   render() {
+
     return (
       <header className="header">
           <ul className="chose-display-variant">
@@ -24,7 +35,7 @@ class Header extends React.Component {
               </button>
             </li>
           </ul>
-          <form className="header__search-form" onSubmit={() => console.log("Form submited")}>
+          <form className="header__search-form" onSubmit={this.onMovieSearch}>
           <input 
             className="header__search-form--search-field"
             placeholder="type to search..."
@@ -33,6 +44,10 @@ class Header extends React.Component {
       </header>
     );
   }
+}
+
+Header.propTypes = {
+  searchMovie: PropTypes.func.isRequired,
 }
 
 // Header.propTypes = {
