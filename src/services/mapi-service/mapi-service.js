@@ -15,11 +15,17 @@ const createURL = (key, urlBase, lang, movieToSearch) => {
   }
   const url = `https://${urlBase}/search/movie?api_key=${key}&language=${lang}&query=${movieToSearch}&page=1&include_adult=false`;
   // const url = `https://${baseURL}/search/movie?api_key=${key}&language=${language}=${movieToSearch}&page=1&include_adult=false`;
+  
+  // request movie
+  // https://api.themoviedb.org/3/movie/12345?api_key=82a13cf2a29a7a4cf5cdfa5f53773181&language=en-US
+
+  // request configuration
+  // https://api.themoviedb.org/3/configuration?api_key=82a13cf2a29a7a4cf5cdfa5f53773181
   return url;
 }
 
 
-export default class MapiService{
+class MapiService{
   async getMovie (movieToSearch) {
 
     const url = createURL(apiKey, baseURL, language, movieToSearch);
@@ -29,10 +35,9 @@ export default class MapiService{
       throw new Error(`Could not receive data from ${url} , received ${response.status}`);
     }
 
-    console.log(response);
     const body = await response.json();
-    console.log(body);
-    return body;
+    console.log(response);
+    return body.results;
   }
 
   async getTopRated () {
@@ -49,3 +54,6 @@ export default class MapiService{
     return body;
   }
 }
+
+const mapiService = new MapiService();
+export default mapiService;

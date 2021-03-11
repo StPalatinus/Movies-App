@@ -1,5 +1,5 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 import './movies-list.css';
 
@@ -14,7 +14,10 @@ export default class MoviesList extends React.Component {
   }
 
   render() {
-    
+    const { moviesList } = this.props
+    // console.log(moviesList[0].id);
+    console.log(moviesList);
+
     return (
       <section className="movies">
           <section className="movies-list">
@@ -111,8 +114,9 @@ export default class MoviesList extends React.Component {
   }
 }
 
-// Header.propTypes = {
-  
-// };
+MoviesList.propTypes = {
+  moviesList: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
 
-// export default MoviesList;
+// movie by ID
+// https://api.themoviedb.org/3/movie/280?api_key=82a13cf2a29a7a4cf5cdfa5f53773181&language=en-US
