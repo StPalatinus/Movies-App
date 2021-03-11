@@ -16,6 +16,7 @@ export default class MoviesList extends React.Component {
   render() {
     const { moviesList } = this.props
     // console.log(moviesList[0].id);
+    // console.log(moviesList[0].id);
     console.log(moviesList);
 
     return (
