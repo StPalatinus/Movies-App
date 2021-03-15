@@ -1,7 +1,10 @@
+import posterNone from '../../img/poster_none.jpg';
+
 const apiKey = "82a13cf2a29a7a4cf5cdfa5f53773181";
 const baseURL = "api.themoviedb.org/3";
-// const language = "ru";
+// const language = "ru-RU";
 const language = "en-US";
+const posterSize = "w185";
 
 // const url =`https://api.themoviedb.org/3/movie/76341?api_key=${apiKey}&language=ru`;
 // const url2 = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=${movieToSearch}&page=1&include_adult=false`;
@@ -25,7 +28,7 @@ const createURL = (key, urlBase, lang, movieToSearch) => {
 }
 
 
-class MapiService{
+class MapiService {
   async getMovie (movieToSearch) {
 
     const url = createURL(apiKey, baseURL, language, movieToSearch);
@@ -52,6 +55,19 @@ class MapiService{
     console.log(response);
     const body = await response.json();
     return body;
+  }
+
+  createPosterUrl (posterPath) {
+    let posterURL;
+    if (posterPath === null) {
+      posterURL = `${ posterNone }`;
+      // posterURL = "../../img/poster_none.jpg"
+      // posterURL = "D:/Git_Clones/movies-app/src/img/poster_none.jpg"
+    } else {
+      posterURL = `http://image.tmdb.org/t/p/${posterSize}${posterPath}`;
+    }
+      
+    return posterURL;
   }
 }
 

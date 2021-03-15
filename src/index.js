@@ -24,13 +24,19 @@ class MoviesApp extends React.Component {
 
       this.setState(() => ({
           moviesList: movies,
-        }));
+      }));
     };
 
   }
 
+  componentDidMount() {
+    console.log(this.state);
+  }
+
   render() {
 
+    console.log(this.state.moviesList.length);
+    console.log(this.state.selectedPage);
     return (
       <section id="appbody">
         < Header searchMovie = {this.searchMovie} />
