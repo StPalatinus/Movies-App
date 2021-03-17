@@ -7,7 +7,7 @@ class Header extends React.Component {
   constructor(props) {
     super(props);
 
-    const { searchMovie } = this.props;
+    const { getMovie } = this.props;
 
     Header.defaultProps = {
       
@@ -15,7 +15,7 @@ class Header extends React.Component {
 
     this.onMovieSearch = (evt) => {
       evt.preventDefault();
-      searchMovie(evt.target.firstChild.value);
+      getMovie(evt.target.firstChild.value);
     }
   }
 
@@ -47,7 +47,7 @@ class Header extends React.Component {
 }
 
 Header.propTypes = {
-  searchMovie: PropTypes.func.isRequired,
+  getMovie: PropTypes.func.isRequired,
 }
 
 // Header.propTypes = {

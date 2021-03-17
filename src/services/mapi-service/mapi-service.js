@@ -6,24 +6,16 @@ const baseURL = "api.themoviedb.org/3";
 const language = "en-US";
 const posterSize = "w185";
 
-// const url =`https://api.themoviedb.org/3/movie/76341?api_key=${apiKey}&language=ru`;
-// const url2 = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=${movieToSearch}&page=1&include_adult=false`;
-// ${baseURL}/search/movie?&api_key=${API_KEY}&language=${LANGUAGE}&query=${movieToSearch}`
 
+const createSearchURL = (key, urlBase, lang, movieToSearch) => {
 
-const createURL = (key, urlBase, lang, movieToSearch) => {
   if (!movieToSearch) {
     const url =  `${baseURL}/movie/top_rated?api_key=${apiKey}&language=${language}`;
     return url;
   }
-  const url = `https://${urlBase}/search/movie?api_key=${key}&language=${lang}&query=${movieToSearch}&page=1&include_adult=false`;
-  // const url = `https://${baseURL}/search/movie?api_key=${key}&language=${language}=${movieToSearch}&page=1&include_adult=false`;
-  
-  // request movie
-  // https://api.themoviedb.org/3/movie/12345?api_key=82a13cf2a29a7a4cf5cdfa5f53773181&language=en-US
 
-  // request configuration
-  // https://api.themoviedb.org/3/configuration?api_key=82a13cf2a29a7a4cf5cdfa5f53773181
+  const url = `https://${urlBase}/search/movie?api_key=${key}&language=${lang}&query=${movieToSearch}&page=1&include_adult=false`;
+
   return url;
 }
 
@@ -31,7 +23,7 @@ const createURL = (key, urlBase, lang, movieToSearch) => {
 class MapiService {
   async getMovie (movieToSearch) {
 
-    const url = createURL(apiKey, baseURL, language, movieToSearch);
+    const url = createSearchURL(apiKey, baseURL, language, movieToSearch);
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -39,13 +31,13 @@ class MapiService {
     }
 
     const body = await response.json();
-    console.log(response);
+
     return body.results;
   }
 
-  async getTopRated () {
+  async getTopRated() {
 
-    const url = createURL(apiKey, baseURL, language);
+    const url = createSearchURL(apiKey, baseURL, language);
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -57,17 +49,56 @@ class MapiService {
     return body;
   }
 
-  createPosterUrl (posterPath) {
+  createPosterUrl(posterPath) {
+
     let posterURL;
     if (posterPath === null) {
+
       posterURL = `${ posterNone }`;
-      // posterURL = "../../img/poster_none.jpg"
-      // posterURL = "D:/Git_Clones/movies-app/src/img/poster_none.jpg"
     } else {
       posterURL = `http://image.tmdb.org/t/p/${posterSize}${posterPath}`;
     }
       
     return posterURL;
+  }
+
+  async downloadGenreConfig() {
+
+    const url = "https://api.themoviedb.org/3/genre/movie/list?api_key=82a13cf2a29a7a4cf5cdfa5f53773181&language=en-US";
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Could not receive data from ${url} , received ${response.status}`);
+    }
+    
+    const body = await response.json();
+    
+    // localStorage.clear();
+    localStorage.setItem('genres', JSON.stringify(body.genres));
+    
+    return body.genres;
+  }
+
+  getLocalGenreConfig() {
+
+    let checkCount = 3;
+    const localConfig = () => JSON.parse(localStorage.getItem('genres'))
+
+      const timerID = setInterval(() => {
+        checkCount -= 1;
+
+        // const localConfig = () => JSON.parse(localStorage.getItem('genres'))
+
+        console.log(checkCount);
+        
+        /* eslint no-unused-expressions: "off" */
+        localConfig() ? clearInterval(timerID) : localConfig();
+
+        if (checkCount <= 0) {
+          clearInterval(timerID);
+        }
+      }, 500);
+      return localConfig();
   }
 }
 

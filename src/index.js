@@ -11,35 +11,44 @@ class MoviesApp extends React.Component {
   constructor() {
     super();
 
-    let movies ;
-
     this.state = {
       moviesList: [],
       selectedPage: 1,
     };
 
-    this.searchMovie = async (movieTosearch) => {
+    this.getMovie = async (movieTosearch) => {
       
-      movies = await mapiService.getMovie(movieTosearch);
+      const movies = await mapiService.getMovie(movieTosearch);
 
       this.setState(() => ({
           moviesList: movies,
       }));
     };
-
   }
 
   componentDidMount() {
-    console.log(this.state);
-  }
+    
+    const recievedGenres = mapiService.downloadGenreConfig();
+    console.log(recievedGenres);
+
+    // const tra = mapiService.getLocalGenreConfig();
+    // console.log(tra);
+
+    // recievedGenres.then((result) => console.log(result));
+
+    // const ava = ( async () => {
+    //   const recievedGenres = await mapiService.renewGenreConfig();
+    //   return recievedGenres;
+    // })();
+      
+    // ava.then((result) => console.log(result));
+  };
 
   render() {
 
-    console.log(this.state.moviesList.length);
-    console.log(this.state.selectedPage);
     return (
       <section id="appbody">
-        < Header searchMovie = {this.searchMovie} />
+        < Header getMovie = {this.getMovie} />
         < MoviesList moviesList = {this.state.moviesList}/>
         < Footer 
           moviesCount = { this.state.moviesList.length } 

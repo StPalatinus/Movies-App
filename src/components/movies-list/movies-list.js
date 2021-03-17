@@ -15,8 +15,14 @@ export default class MoviesList extends React.Component {
   //   // }
   // }
 
+  componentDidMount() {
+    const genreList = mapiService.getLocalGenreConfig();
+    console.log(genreList);
+  }
+
   render() {
     const { moviesList } = this.props
+    const genreList = mapiService.getLocalGenreConfig();
     // console.log(moviesList[0].id);
     // console.log(moviesList[0].id);
     console.log(moviesList);
@@ -29,14 +35,17 @@ export default class MoviesList extends React.Component {
         attachedGenres = null;
       } else {
         attachedGenres = movie.genre_ids.map((attachedGenre) =>  
-      <span className="movie__genre--name">{attachedGenre}</span>
+      // <span className="movie__genre--name">{attachedGenre}</span>
+      {
+        const idx = genreList.find(item => item.id === attachedGenre);
+      return <span className="movie__genre--name">{idx.name}</span>
+      }
       );
       }
 
      return  (<div className="movie">
       <a href="#" className="movie__link">
         <img src={mapiService.createPosterUrl(movie.poster_path)}
-        // <img src={posterNone}
             className="movie__poster" 
             alt={movie.original_title} 
             width="183" 
@@ -68,6 +77,3 @@ export default class MoviesList extends React.Component {
 MoviesList.propTypes = {
   moviesList: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
-
-// movie by ID
-// https://api.themoviedb.org/3/movie/280?api_key=82a13cf2a29a7a4cf5cdfa5f53773181&language=en-US
