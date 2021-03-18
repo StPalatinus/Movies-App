@@ -34,18 +34,29 @@
 
 .movie__name {
   width: 132px;
-  height: 28px;
+  min-height: 28px;
+  margin-top: 12px;
+  margin-bottom: 7px;
   font-size: 20px;
   line-height: 28px;
   font-weight: 400;
 }
 
-.movie__release-date {
+.movie__release-date, 
+.movie__no-release-date {
+  display: block;
   width: 132px;
-  height: 22px;
+  min-height: 22px;
   margin-bottom: 7px;
   font-size: 12px;
   line-height: 22px;
+  font-weight: 400;
+}
+
+.movie__no-release-date {
+  color: red;
+  font-size: 10px;
+  line-height: 18px;
   font-weight: 400;
 }
 
@@ -58,7 +69,7 @@
 
 .movie__genre--name {
   display: inline-block;
-  width: 37px;
+  min-width: 37px;
   height: 15px;
   font-size: 12px;
   line-height: 15px;
@@ -69,12 +80,15 @@
 }
 
 .movie__description--text {
+  position: relative;
+  max-height: 50%;
   font-family: inherit;
   font-size: 12px;
   line-height: 22px;
   color: #000;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
+  /* text-overflow: ellipsis; */
   display: -webkit-box;
   -webkit-line-clamp: 6;
   -webkit-box-orient: vertical;

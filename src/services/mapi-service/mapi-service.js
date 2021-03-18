@@ -89,7 +89,7 @@ class MapiService {
 
         // const localConfig = () => JSON.parse(localStorage.getItem('genres'))
 
-        console.log(checkCount);
+        // console.log(checkCount);
         
         /* eslint no-unused-expressions: "off" */
         localConfig() ? clearInterval(timerID) : localConfig();
