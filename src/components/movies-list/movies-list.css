@@ -1,7 +1,17 @@
-.movies {
+/* .ant-layout-content {
+  display: block;
+} */
+
+.main {
   background-color: #fff;
   margin: 36px;
 }
+
+.movies {
+  /* background-color: #fff; */
+  /* margin: 36px; */
+}
+
 .movies-list {
   display: grid;
   grid-template-columns: auto auto;
@@ -35,7 +45,7 @@
 .movie__name {
   width: 132px;
   min-height: 28px;
-  margin-top: 12px;
+  margin-top: 7px;
   margin-bottom: 7px;
   font-size: 20px;
   line-height: 28px;
@@ -73,6 +83,7 @@
   height: 15px;
   font-size: 12px;
   line-height: 15px;
+  text-align: center;
   padding: 3px 3px 3px 5px;
   border: 1px solid #d9d9d9;
   border-radius: 3px;

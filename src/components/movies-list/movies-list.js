@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import format from 'date-fns/format';
 import { ru } from 'date-fns/locale';
+import 'antd/dist/antd.css';
+import { Image, Tag } from 'antd';
 
 import mapiService from '../../services/mapi-service';
 // import posterNone from '../../img/poster_none.jpg';
@@ -105,17 +107,15 @@ export default class MoviesList extends React.Component {
       if (movie.genre_ids.length === 0) {
         attachedGenres = null;
       } else {
-        attachedGenres = movie.genre_ids.map((attachedGenre) =>
-          // <span className="movie__genre--name">{attachedGenre}</span>
-          {
-            const idx = genreList.find((item) => item.id === attachedGenre);
-            return (
-              <span className="movie__genre--name" key={attachedGenre}>
-                {idx.name}
-              </span>
-            );
-          }
-        );
+        attachedGenres = movie.genre_ids.map((attachedGenre) => {
+          const idx = genreList.find((item) => item.id === attachedGenre);
+          return (
+            // <span className="movie__genre--name" key={attachedGenre}>
+            //   {idx.name}
+            // </span >
+            <Tag key={attachedGenre}>{idx.name}</Tag>
+          );
+        });
       }
 
       const ReleaseDate = () => {
@@ -132,12 +132,12 @@ export default class MoviesList extends React.Component {
       return (
         <div className="movie" key={movie.id}>
           <a href="#" className="movie__link">
-            <img
-              src={mapiService.createPosterUrl(movie.poster_path)}
-              className="movie__poster"
-              alt={movie.original_title}
-              width="183"
-              height="281"
+            <Image
+              width={183}
+              src={mapiService.getPosterUrl(movie.poster_path, 'w185')}
+              preview={{
+                src: mapiService.getPosterUrl(movie.poster_path, 'original'),
+              }}
             />
           </a>
           <div className="movie__description">

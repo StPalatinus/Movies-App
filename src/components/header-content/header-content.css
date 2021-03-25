@@ -1,7 +1,37 @@
-.header {
+@font-face {
+  font-family: Inter;
+  src: url(../../Fonts/Inter/static/Inter-Regular.ttf);
+  /* font-weight: normal; */
+}
+
+/* .header-section {
+  display: block;
+  font-family: Inter, sans-serif;
   background-color: #ffffff;
   margin-left: 36px;
   margin-right: 36px;
+} */
+
+.ant-tabs-top {
+  width: 200px;
+  margin: 0 auto;
+}
+
+/* .ant-tabs-nav {
+  width: 200px;
+  margin: 0 auto;
+} */
+
+.ant-tabs-nav-wrap {
+  width: 200px;
+}
+
+.header {
+  font-family: Inter, sans-serif;
+  background-color: #ffffff;
+  margin-left: 36px;
+  margin-right: 36px;
+  height: auto;
 }
 
 .chose-display-variant {
@@ -33,8 +63,8 @@
 
 .header__search-form--search-field {
   width: 100%;
+  height: 44px;
   box-sizing: border-box;
-  /* margin: 0px 36px; */
   padding: 9px 12px;
 }
 
