@@ -4,7 +4,9 @@ import format from 'date-fns/format';
 import { ru } from 'date-fns/locale';
 import 'antd/dist/antd.css';
 import { Image, Tag } from 'antd';
+// import Spinner from '../spinner';
 
+// import loadingImage from '../../img/loading128.png';
 import mapiService from '../../services/mapi-service';
 // import posterNone from '../../img/poster_none.jpg';
 
@@ -14,8 +16,12 @@ export default class MoviesList extends React.Component {
   // constructor(props) {
   //   super(props);
 
+  //   // MoviesList.defaultProps = {
+
+  //   // }
+
   //   // this.state = {
-  //   //   name: "Movie1",
+  //   //   posterIsLoading: true,
   //   // }
   // }
 
@@ -52,57 +58,33 @@ export default class MoviesList extends React.Component {
 
       let lessLength = maxlength - 10;
 
-      if (countChildElementsHeight(description.parentElement.children) > description.parentElement.offsetHeight) {
-        while (
-          countChildElementsHeight(description.parentElement.children) > description.parentElement.offsetHeight ||
-          description.offsetHeight >
-            description.parentElement.offsetHeight - (description.parentElement.scrollHeight - description.offsetHeight)
-        ) {
-          const currentLength = reduceLength(description.innerText, lessLength);
+      // if (countChildElementsHeight(description.parentElement.children) > description.parentElement.offsetHeight) {
+      while (
+        countChildElementsHeight(description.parentElement.children) > description.parentElement.offsetHeight ||
+        description.offsetHeight >
+          description.parentElement.offsetHeight - (description.parentElement.scrollHeight - description.offsetHeight)
+      ) {
+        const currentLength = reduceLength(description.innerText, lessLength);
 
-          const txt = `${description.innerText.slice(0, currentLength)}`;
-          description.innerText = `${txt.trim()}...`;
+        const txt = `${description.innerText.slice(0, currentLength)}`;
+        description.innerText = `${txt.trim()}...`;
 
-          lessLength -= 10;
-        }
+        lessLength -= 10;
       }
+
+      // }
     });
   }
 
   render() {
     const { moviesList } = this.props;
+    // const { posterIsLoading } = this.state;
     const genreList = mapiService.getLocalGenreConfig();
 
     // console.log(moviesList);
 
     const recievedMovies = moviesList.map((movie) => {
       let attachedGenres;
-
-      // console.log(releaseDate);
-      // if (Object.prototype.toString.call(releaseDate) === "[object Date]") {
-      //   // it is a date
-      //   /* eslint no-restricted-globals: ["off", "isNaN"] */
-      //   if (isNaN(releaseDate.getTime())) {  // d.valueOf() could also work
-      //     // date is not valid
-
-      //     timeBlock = null;
-      //     console.log(timeBlock);
-      //     console.log("date is not valid");
-      //   } else {
-      //     // date is valid
-
-      //     timeBlock = releaseDate;
-      //     console.log(timeBlock);
-      //     console.log(timeBlock);
-      //     console.log("date is valid!");
-      //   }
-      // } else {
-      //   // not a date
-
-      //   timeBlock = null;
-      //   console.log("not a date");
-      // }
-      // }
 
       if (movie.genre_ids.length === 0) {
         attachedGenres = null;
@@ -129,6 +111,10 @@ export default class MoviesList extends React.Component {
         );
       };
 
+      // const previewImage = mapiService.getPosterUrl(movie.poster_path, 'original');
+
+      // const previewPic = <Spinner />;
+
       return (
         <div className="movie" key={movie.id}>
           <a href="#" className="movie__link">
@@ -138,6 +124,10 @@ export default class MoviesList extends React.Component {
               preview={{
                 src: mapiService.getPosterUrl(movie.poster_path, 'original'),
               }}
+              // preview={{
+              //   src: posterIsLoading ? loadingImage : previewImage,
+              // }}
+              // preview={<Spinner />}
             />
           </a>
           <div className="movie__description">

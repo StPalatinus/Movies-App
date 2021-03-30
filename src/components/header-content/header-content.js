@@ -24,25 +24,13 @@ class HeaderContent extends React.Component {
     return (
       <section className="header-section">
         <Tabs className="chose-display-variant" defaultActiveKey="1" centered onChange={() => {}}>
-          <TabPane tab="Tab 1" key="1">
-            Content of Tab Pane 1
+          <TabPane tab="Search" key="1">
+            {/* Content of Tab Pane 1 */}
           </TabPane>
-          <TabPane tab="Tab 2" key="2">
-            Content of Tab Pane 2
+          <TabPane tab="Rated" key="2">
+            {/* Content of Tab Pane 2 */}
           </TabPane>
         </Tabs>
-        {/* <ul className="chose-display-variant">
-          <li className="chose-display-variant-item">
-            <button className="chose-display-variant-button selected" type="button">
-              Search
-            </button>
-          </li>
-          <li className="chose-display-variant-item">
-            <button className="chose-display-variant-button" type="button">
-              Rated
-            </button>
-          </li>
-        </ul> */}
         <form className="header__search-form" onSubmit={this.onMovieSearch}>
           <input
             className="header__search-form--search-field"
