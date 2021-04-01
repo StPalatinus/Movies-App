@@ -4,7 +4,6 @@ import format from 'date-fns/format';
 import { ru } from 'date-fns/locale';
 import 'antd/dist/antd.css';
 import { Image, Tag } from 'antd';
-// import Spinner from '../spinner';
 
 // import loadingImage from '../../img/loading128.png';
 import mapiService from '../../services/mapi-service';
@@ -111,10 +110,6 @@ export default class MoviesList extends React.Component {
         );
       };
 
-      // const previewImage = mapiService.getPosterUrl(movie.poster_path, 'original');
-
-      // const previewPic = <Spinner />;
-
       return (
         <div className="movie" key={movie.id}>
           <a href="#" className="movie__link">
@@ -127,7 +122,6 @@ export default class MoviesList extends React.Component {
               // preview={{
               //   src: posterIsLoading ? loadingImage : previewImage,
               // }}
-              // preview={<Spinner />}
             />
           </a>
           <div className="movie__description">

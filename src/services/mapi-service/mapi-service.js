@@ -17,6 +17,8 @@ const createSearchURL = (key, urlBase, lang, movieToSearch) => {
   return url;
 };
 
+// localStorage.clear("genres");
+
 class MapiService {
   async getMovie(movieToSearch) {
     const url = createSearchURL(apiKey, baseURL, language, movieToSearch);
@@ -56,11 +58,12 @@ class MapiService {
   }
 
   async downloadGenreConfig() {
-    const url = 'https://api.themoviedb.org/3/genre/movie/list?api_key=82a13cf2a29a7a4cf5cdfa5f53773181&language=en-US';
+    const url = `https://${baseURL}/genre/movie/list?api_key=${apiKey}&language=${language}`;
     const response = await fetch(url);
 
     if (!response.ok) {
       throw new Error(`Could not receive data from ${url} , received ${response.status}`);
+      // return false;
     }
 
     const body = await response.json();
@@ -73,23 +76,32 @@ class MapiService {
 
   getLocalGenreConfig() {
     let checkCount = 3;
-    const localConfig = () => JSON.parse(localStorage.getItem('genres'));
+    const getConfig = () => JSON.parse(localStorage.getItem('genres'));
+    let localConfig = getConfig();
 
     const timerID = setInterval(() => {
       checkCount -= 1;
 
-      // const localConfig = () => JSON.parse(localStorage.getItem('genres'))
+      // const getConfig = () => JSON.parse(localStorage.getItem('genres'))
 
       // console.log(checkCount);
 
-      /* eslint no-unused-expressions: "off" */
-      localConfig() ? clearInterval(timerID) : localConfig();
+      const retyConfig = () => {
+        localConfig = getConfig();
+      };
 
-      if (checkCount <= 0) {
+      // if (localConfig) {
+      //   clearInterval(timerID)
+      // }
+
+      console.log(checkCount);
+      if (localConfig || checkCount <= 0) {
         clearInterval(timerID);
       }
-    }, 500);
-    return localConfig();
+
+      retyConfig();
+    }, 150);
+    return localConfig;
   }
 }
 

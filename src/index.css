@@ -37,6 +37,13 @@ body {
   margin: 0 auto;
 }
 
+.spin-wraper {
+  margin: 20px 0;
+  padding: 30px 50px;
+  text-align: center;
+  /* border-radius: 4px; */
+}
+
 /* code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 } */

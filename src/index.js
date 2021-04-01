@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Layout } from 'antd';
+import { Layout, Spin, Alert } from 'antd';
 import 'antd/dist/antd.css';
 
 import './index.css';
@@ -21,50 +21,115 @@ class MoviesApp extends React.Component {
     this.state = {
       moviesList: [],
       selectedPage: 1,
+      loading: false,
+      error: false,
+      errMessage: null,
+      errDescription: null,
+    };
+
+    this.onError = (err, errMessage, errDescription) => {
+      console.log(`ERROR!${err}`);
+      this.setState(() => ({
+        error: true,
+        loading: false,
+        errMessage,
+        errDescription,
+      }));
     };
 
     this.getMovie = async (movieTosearch) => {
-      const movies = await mapiService.getMovie(movieTosearch);
+      let movies;
+
+      this.setState(() => ({
+        loading: true,
+      }));
+
+      try {
+        movies = await mapiService.getMovie(movieTosearch);
+      } catch (err) {
+        this.onError(err, 'Network Error', 'Could not receive data from server');
+      }
 
       this.setState(() => ({
         moviesList: movies,
+        loading: false,
       }));
+    };
+
+    this.getGenreConfig = async () => {
+      try {
+        await mapiService.downloadGenreConfig();
+      } catch (err) {
+        console.log(err);
+        this.onError(err, 'Network Error', "Can't get genre config");
+      } finally {
+        console.log(this.state);
+      }
     };
   }
 
   componentDidMount() {
-    const recievedGenres = mapiService.downloadGenreConfig();
-    console.log(recievedGenres);
+    this.getGenreConfig();
+    // let recievedGenres;
+    // console.log(this);
+    // try {
 
-    // const tra = mapiService.getLocalGenreConfig();
-    // console.log(tra);
+    //   mapiService.downloadGenreConfig();
+    // } catch(err) {
+    //   console.log(err);
+    //   this.onError(
+    //     err,
+    //     "Network Error",
+    //     "Can't get genre config"
+    //   );
+    // } finally {
+    //   console.log(this.state);
+    // }
 
-    // recievedGenres.then((result) => console.log(result));
-
-    // const ava = ( async () => {
-    //   const recievedGenres = await mapiService.renewGenreConfig();
-    //   return recievedGenres;
-    // })();
-
-    // ava.then((result) => console.log(result));
+    // const recievedGenres = mapiService.downloadGenreConfig();
+    // console.log(recievedGenres);
   }
 
   render() {
+    const { loading, error, errMessage, errDescription } = this.state;
+
+    const hasData = !(loading || error);
+
+    // const errorText = <Alert
+    //                     message={errMessage}
+    //                     description={errDescription}
+    //                     type="error"
+    //                   />
+
+    const errorMessage = error ? <Alert message={errMessage} description={errDescription} type="error" /> : null;
+    const spinner = loading ? (
+      <div className="spin-wraper">
+        <Spin />
+      </div>
+    ) : null;
+    const content = hasData ? <MoviesList moviesList={this.state.moviesList} /> : null;
+
+    const footerContent = error ? (
+      <FooterContent />
+    ) : (
+      <FooterContent
+        moviesCount={this.state.moviesList.length}
+        moviesPerPage={6}
+        selectedPage={this.state.selectedPage}
+      />
+    );
+
     return (
       <Layout id="appbody">
         <Header className="header">
           <HeaderContent getMovie={this.getMovie} />
         </Header>
         <Content className="main">
-          <MoviesList moviesList={this.state.moviesList} />
+          {errorMessage}
+          {spinner}
+          {content}
         </Content>
-        <Footer>
-          <FooterContent
-            moviesCount={this.state.moviesList.length}
-            moviesPerPage={6}
-            selectedPage={this.state.selectedPage}
-          />
-        </Footer>
+        <Footer>{footerContent}</Footer>
       </Layout>
     );
   }
