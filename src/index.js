@@ -60,7 +60,6 @@ class MoviesApp extends React.Component {
       try {
         await mapiService.downloadGenreConfig();
       } catch (err) {
-        console.log(err);
         this.onError(err, 'Network Error', "Can't get genre config");
       } finally {
         console.log(this.state);
@@ -95,19 +94,13 @@ class MoviesApp extends React.Component {
 
     const hasData = !(loading || error);
 
-    // const errorText = <Alert
-    //                     message={errMessage}
-    //                     description={errDescription}
-    //                     type="error"
-    //                   />
-
     const errorMessage = error ? <Alert message={errMessage} description={errDescription} type="error" /> : null;
     const spinner = loading ? (
       <div className="spin-wraper">
         <Spin />
       </div>
     ) : null;
-    const content = hasData ? <MoviesList moviesList={this.state.moviesList} /> : null;
+    const content = hasData ? <MoviesList moviesList={this.state.moviesList} onError={this.onError} /> : null;
 
     const footerContent = error ? (
       <FooterContent />

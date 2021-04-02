@@ -1,4 +1,4 @@
-import posterNone from '../../img/poster_none.jpg';
+import posterNone from '../../img/posternone.jpg';
 
 const apiKey = '82a13cf2a29a7a4cf5cdfa5f53773181';
 const baseURL = 'api.themoviedb.org/3';

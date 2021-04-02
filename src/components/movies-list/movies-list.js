@@ -115,10 +115,12 @@ export default class MoviesList extends React.Component {
           <a href="#" className="movie__link">
             <Image
               width={183}
+              alt={movie.original_title}
               src={mapiService.getPosterUrl(movie.poster_path, 'w185')}
               preview={{
                 src: mapiService.getPosterUrl(movie.poster_path, 'original'),
               }}
+              fallback=""
               // preview={{
               //   src: posterIsLoading ? loadingImage : previewImage,
               // }}
