@@ -12,75 +12,85 @@ import mapiService from '../../services/mapi-service';
 import './movies-list.css';
 
 export default class MoviesList extends React.Component {
-  // constructor(props) {
-  //   super(props);
+  constructor(props) {
+    super(props);
 
-  //   // MoviesList.defaultProps = {
+    // MoviesList.defaultProps = {
 
-  //   // }
+    // }
 
-  //   // this.state = {
-  //   //   posterIsLoading: true,
-  //   // }
-  // }
+    // this.state = {
+    //   posterIsLoading: true,
+    // }
+
+    this.formatText = () => {
+      const descriptionsArr = document.querySelectorAll('.movie__description--text');
+      // console.log(descriptionsArr);
+      const maxlength = 200;
+      // let acc = 0;
+
+      const reduceLength = (text, currentLength) => {
+        if (!currentLength || currentLength <= 0) {
+          return 0;
+        }
+
+        const newTextLength = currentLength - 1;
+        if (text[newTextLength] !== ' ') {
+          /* eslint no-unused-vars: "off" */
+          return reduceLength(text, newTextLength);
+        }
+        return newTextLength;
+      };
+
+      descriptionsArr.forEach((description) => {
+        const countChildElementsHeight = (element) => {
+          let acc = 0;
+
+          for (const child of element) {
+            acc += child.scrollHeight;
+          }
+
+          return acc;
+        };
+
+        let lessLength = maxlength - 10;
+
+        // if (countChildElementsHeight(description.parentElement.children) > description.parentElement.offsetHeight) {
+
+        while (
+          countChildElementsHeight(description.parentElement.children) > description.parentElement.offsetHeight ||
+          description.offsetHeight >
+            description.parentElement.offsetHeight - (description.parentElement.scrollHeight - description.offsetHeight)
+        ) {
+          const currentLength = reduceLength(description.innerText, lessLength);
+
+          if (currentLength === 0) {
+            description.innerText = null;
+            return;
+          }
+
+          const txt = `${description.innerText.slice(0, currentLength)}`;
+          description.innerText = `${txt.trim()}...`;
+
+          lessLength -= 10;
+        }
+      });
+    };
+  }
 
   componentDidMount() {
     mapiService.getLocalGenreConfig();
-    // const genreList = mapiService.getLocalGenreConfig();
-    // console.log(genreList);
+    this.formatText();
   }
 
   componentDidUpdate() {
-    const descriptionsArr = document.querySelectorAll('.movie__description--text');
-    const maxlength = 200;
-    // let acc = 0;
-
-    const reduceLength = (text, currentLength) => {
-      const newTextLength = currentLength - 1;
-      if (text[newTextLength] !== ' ') {
-        /* eslint no-unused-vars: "off" */
-        return reduceLength(text, newTextLength);
-      }
-      return newTextLength;
-    };
-
-    descriptionsArr.forEach((description) => {
-      const countChildElementsHeight = (element) => {
-        let acc = 0;
-
-        for (const child of element) {
-          acc += child.scrollHeight;
-        }
-
-        return acc;
-      };
-
-      let lessLength = maxlength - 10;
-
-      // if (countChildElementsHeight(description.parentElement.children) > description.parentElement.offsetHeight) {
-      while (
-        countChildElementsHeight(description.parentElement.children) > description.parentElement.offsetHeight ||
-        description.offsetHeight >
-          description.parentElement.offsetHeight - (description.parentElement.scrollHeight - description.offsetHeight)
-      ) {
-        const currentLength = reduceLength(description.innerText, lessLength);
-
-        const txt = `${description.innerText.slice(0, currentLength)}`;
-        description.innerText = `${txt.trim()}...`;
-
-        lessLength -= 10;
-      }
-
-      // }
-    });
+    this.formatText();
   }
 
   render() {
     const { moviesList } = this.props;
     // const { posterIsLoading } = this.state;
     const genreList = mapiService.getLocalGenreConfig();
-
-    // console.log(moviesList);
 
     const recievedMovies = moviesList.map((movie) => {
       let attachedGenres;

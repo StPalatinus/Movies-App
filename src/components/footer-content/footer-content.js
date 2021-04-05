@@ -10,7 +10,7 @@ class FooterContent extends React.Component {
   constructor(props) {
     super(props);
 
-    const { selectedPage } = this.props;
+    const { changePage } = this.props;
 
     FooterContent.defaultProps = {
       moviesCount: 6,
@@ -18,27 +18,34 @@ class FooterContent extends React.Component {
       selectedPage: 1,
     };
 
-    this.state = {
-      selectedPage,
-    };
+    // this.state = {
+    //   selectedPage,
+    // };
 
-    this.changePag = (evt) => {
-      this.setState(() => ({
-        selectedPage: evt,
-      }));
+    this.changePage = (page) => {
+      // console.log(page);
+      changePage(page);
     };
   }
 
+  componentDidUpdate() {
+    // const { getMovie, selectedPage } = this.props;
+    // const searchField = document.querySelectorAll('.header__search-form--search-field');
+    // console.log(getMovie);
+    // console.log(selectedPage);
+    // console.log(searchField);
+  }
+
   render() {
-    const { moviesPerPage, moviesCount } = this.props;
+    const { moviesPerPage, moviesCount, selectedPage } = this.props;
 
     return (
       <footer className="footer">
         <div>
           <Pagination
-            onChange={this.changePag}
+            onChange={this.changePage}
             total={moviesCount}
-            current={this.state.selectedPage}
+            current={selectedPage}
             defaultCurrent={1}
             defaultPageSize={moviesPerPage}
           />
@@ -52,6 +59,8 @@ FooterContent.propTypes = {
   moviesCount: PropTypes.number,
   moviesPerPage: PropTypes.number,
   selectedPage: PropTypes.number,
+  changePage: PropTypes.func.isRequired,
+  // getMovie: PropTypes.func.isRequired,
 };
 
 export default FooterContent;

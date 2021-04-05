@@ -5,43 +5,54 @@ const baseURL = 'api.themoviedb.org/3';
 // const language = "ru-RU";
 const language = 'en-US';
 // const posterSize = 'w185';
+const defaultPage = 1;
+// const totalPages = 8;
 
-const createSearchURL = (key, urlBase, lang, movieToSearch) => {
+const createSearchURL = (key, urlBase, lang, movieToSearch, page) => {
   if (!movieToSearch) {
     const url = `${baseURL}/movie/top_rated?api_key=${apiKey}&language=${language}`;
     return url;
   }
 
-  const url = `https://${urlBase}/search/movie?api_key=${key}&language=${lang}&query=${movieToSearch}&page=1&include_adult=false`;
+  const url = `https://${urlBase}/search/movie?api_key=${key}&language=${lang}&query=${movieToSearch}&include_adult=false&page=${
+    page || defaultPage
+  }`;
+  // const url = `https://${urlBase}/search/movie?api_key=${key}&language=${lang}&query=${movieToSearch}&include_adult=false&page=${page || defaultPage}&${totalPages}`;
 
   return url;
 };
 
+const TOP_RATED = `https://${baseURL}/movie/top_rated?api_key=${apiKey}&language=${language}`;
+
 // localStorage.clear("genres");
 
 class MapiService {
-  async getMovie(movieToSearch) {
-    const url = createSearchURL(apiKey, baseURL, language, movieToSearch);
-    const response = await fetch(url);
+  async getMovie(movieToSearch, pageNum) {
+    const searchUrl = createSearchURL(apiKey, baseURL, language, movieToSearch, pageNum);
+    const response = await fetch(searchUrl);
 
     if (!response.ok) {
-      throw new Error(`Could not receive data from ${url} , received ${response.status}`);
+      throw new Error(`Could not receive data from ${searchUrl} , received ${response.status}`);
     }
 
     const body = await response.json();
+    // console.log(body);
+    // console.log(body.page);
+    // console.log(body.total_results);
 
-    return body.results;
+    const { results, page } = body;
+    const totalPages = body.total_results;
+
+    return { results, page, totalPages };
   }
 
   async getTopRated() {
-    const url = createSearchURL(apiKey, baseURL, language);
-    const response = await fetch(url);
+    const response = await fetch(TOP_RATED);
 
     if (!response.ok) {
-      throw new Error(`Could not receive data from ${url} , received ${response.status}`);
+      throw new Error(`Could not receive data from ${TOP_RATED} , received ${response.status}`);
     }
 
-    console.log(response);
     const body = await response.json();
     return body;
   }
@@ -94,7 +105,7 @@ class MapiService {
       //   clearInterval(timerID)
       // }
 
-      console.log(checkCount);
+      // console.log(checkCount);
       if (localConfig || checkCount <= 0) {
         clearInterval(timerID);
       }

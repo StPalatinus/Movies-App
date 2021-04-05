@@ -21,10 +21,12 @@ class MoviesApp extends React.Component {
     this.state = {
       moviesList: [],
       selectedPage: 1,
+      moviesCount: 20,
       loading: false,
       error: false,
       errMessage: null,
       errDescription: null,
+      currentMovie: 'reted',
     };
 
     this.onError = (err, errMessage, errDescription) => {
@@ -37,15 +39,23 @@ class MoviesApp extends React.Component {
       }));
     };
 
-    this.getMovie = async (movieTosearch) => {
+    this.getMovie = async (movieTosearch, pageNum) => {
       let movies;
+      let page;
+      let moviesCount;
 
       this.setState(() => ({
         loading: true,
+        currentMovie: movieTosearch,
+        selectedPage: pageNum,
       }));
 
       try {
-        movies = await mapiService.getMovie(movieTosearch);
+        const baseResponse = await mapiService.getMovie(movieTosearch, pageNum);
+        movies = baseResponse.results;
+        page = baseResponse.page;
+        moviesCount = baseResponse.totalPages;
+        // console.log(movies);
       } catch (err) {
         this.onError(err, 'Network Error', 'Could not receive data from server');
       }
@@ -53,6 +63,38 @@ class MoviesApp extends React.Component {
       this.setState(() => ({
         moviesList: movies,
         loading: false,
+        selectedPage: page,
+        moviesCount,
+        // currentMovie: movieTosearch,
+      }));
+    };
+
+    this.getTopRated = async (movieTosearch, pageNum) => {
+      let movies;
+      let page;
+      let moviesCount;
+
+      this.setState(() => ({
+        loading: true,
+        currentMovie: movieTosearch,
+        selectedPage: pageNum,
+      }));
+
+      try {
+        const baseResponse = await mapiService.getTopRated(movieTosearch, pageNum);
+        movies = baseResponse.results;
+        page = baseResponse.page;
+        moviesCount = baseResponse.totalPages;
+      } catch (err) {
+        this.onError(err, 'Network Error', 'Could not receive data from server');
+      }
+
+      this.setState(() => ({
+        moviesList: movies,
+        loading: false,
+        selectedPage: page,
+        moviesCount,
+        currentMovie: movieTosearch,
       }));
     };
 
@@ -61,32 +103,24 @@ class MoviesApp extends React.Component {
         await mapiService.downloadGenreConfig();
       } catch (err) {
         this.onError(err, 'Network Error', "Can't get genre config");
-      } finally {
-        console.log(this.state);
       }
+    };
+
+    // this.setPage = (page) => {
+    //   console.log(page);
+    // };
+
+    this.changePage = (page) => {
+      this.getMovie(this.state.currentMovie, page);
+      this.setState(() => ({
+        selectedPage: page,
+      }));
     };
   }
 
   componentDidMount() {
     this.getGenreConfig();
-    // let recievedGenres;
-    // console.log(this);
-    // try {
-
-    //   mapiService.downloadGenreConfig();
-    // } catch(err) {
-    //   console.log(err);
-    //   this.onError(
-    //     err,
-    //     "Network Error",
-    //     "Can't get genre config"
-    //   );
-    // } finally {
-    //   console.log(this.state);
-    // }
-
-    // const recievedGenres = mapiService.downloadGenreConfig();
-    // console.log(recievedGenres);
+    this.getTopRated();
   }
 
   render() {
@@ -106,9 +140,11 @@ class MoviesApp extends React.Component {
       <FooterContent />
     ) : (
       <FooterContent
-        moviesCount={this.state.moviesList.length}
-        moviesPerPage={6}
+        moviesCount={this.state.moviesCount}
+        moviesPerPage={20}
         selectedPage={this.state.selectedPage}
+        changePage={this.changePage}
+        getMovie={this.getMovie}
       />
     );
 
