@@ -16,6 +16,7 @@ class FooterContent extends React.Component {
       moviesCount: 6,
       moviesPerPage: 6,
       selectedPage: 1,
+      changePage: () => {},
     };
 
     // this.state = {
@@ -59,7 +60,7 @@ FooterContent.propTypes = {
   moviesCount: PropTypes.number,
   moviesPerPage: PropTypes.number,
   selectedPage: PropTypes.number,
-  changePage: PropTypes.func.isRequired,
+  changePage: PropTypes.func,
   // getMovie: PropTypes.func.isRequired,
 };
 

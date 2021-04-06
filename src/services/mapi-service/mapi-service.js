@@ -30,6 +30,7 @@ class MapiService {
   async getMovie(movieToSearch, pageNum) {
     const searchUrl = createSearchURL(apiKey, baseURL, language, movieToSearch, pageNum);
     const response = await fetch(searchUrl);
+    // console.log(response);
 
     if (!response.ok) {
       throw new Error(`Could not receive data from ${searchUrl} , received ${response.status}`);
@@ -42,14 +43,16 @@ class MapiService {
 
     const { results, page } = body;
     const totalPages = body.total_results;
+    const responseStatus = response.status;
 
-    return { results, page, totalPages };
+    return { results, page, totalPages, responseStatus };
   }
 
   async getTopRated() {
     const response = await fetch(TOP_RATED);
 
     if (!response.ok) {
+      // return response.status;
       throw new Error(`Could not receive data from ${TOP_RATED} , received ${response.status}`);
     }
 

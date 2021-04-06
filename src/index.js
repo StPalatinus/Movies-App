@@ -29,8 +29,8 @@ class MoviesApp extends React.Component {
       currentMovie: 'reted',
     };
 
-    this.onError = (err, errMessage, errDescription) => {
-      console.log(`ERROR!${err}`);
+    this.onError = (errMessage, errDescription) => {
+      // console.log(`ERROR!${err}`);
       this.setState(() => ({
         error: true,
         loading: false,
@@ -48,16 +48,25 @@ class MoviesApp extends React.Component {
         loading: true,
         currentMovie: movieTosearch,
         selectedPage: pageNum,
+        error: false,
       }));
 
       try {
         const baseResponse = await mapiService.getMovie(movieTosearch, pageNum);
+        const { responseStatus } = baseResponse;
         movies = baseResponse.results;
         page = baseResponse.page;
         moviesCount = baseResponse.totalPages;
+
+        if (responseStatus === 200 && movies.length === 0) {
+          // console.log(responseStatus);
+          // console.log(movies.length);
+          this.onError('Base error', 'Could not found requested resource');
+        }
+
         // console.log(movies);
       } catch (err) {
-        this.onError(err, 'Network Error', 'Could not receive data from server');
+        this.onError('Network Error', 'Could not receive data from server');
       }
 
       this.setState(() => ({
@@ -86,7 +95,7 @@ class MoviesApp extends React.Component {
         page = baseResponse.page;
         moviesCount = baseResponse.totalPages;
       } catch (err) {
-        this.onError(err, 'Network Error', 'Could not receive data from server');
+        this.onError('Network Error', 'Could not receive data from server');
       }
 
       this.setState(() => ({

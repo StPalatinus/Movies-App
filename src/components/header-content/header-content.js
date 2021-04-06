@@ -51,24 +51,27 @@ class HeaderContent extends React.Component {
   componentDidUpdate() {
     const { getMovie } = this.props;
 
+    const debouncedGetMovie = debounce(getMovie, 500, {
+      leading: true,
+      trailing: false,
+      maxWait: 1350,
+    });
+
     this.onMovieSearch = (evt) => {
-      // console.log(evt.target.value);
+      let value;
 
       evt.preventDefault();
+      if (evt.target.value) {
+        value = evt.target.value;
+      } else if (evt.target.firstChild) {
+        value = evt.target.firstChild.value;
+      }
 
-      if (evt.target.value === '') {
+      if (value === '' || !value) {
         return;
       }
-      // console.log(searchField);
-      const debouncedGetMovie = debounce(getMovie, 250, {
-        leading: true,
-        trailing: false,
-        maxWait: 1000,
-      });
 
-      debouncedGetMovie(evt.target.value, 1);
-
-      // getMovie(evt.target.value, 1);
+      debouncedGetMovie(value, 1);
     };
   }
 
@@ -83,12 +86,7 @@ class HeaderContent extends React.Component {
             {/* Content of Tab Pane 2 */}
           </TabPane>
         </Tabs>
-        <form
-          className="header__search-form"
-          onSubmit={(evt) => {
-            evt.preventDefault();
-          }}
-        >
+        <form className="header__search-form" onSubmit={this.onMovieSearch}>
           <input
             className="header__search-form--search-field"
             placeholder="type to search..."
