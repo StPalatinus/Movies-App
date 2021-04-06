@@ -51,10 +51,8 @@ class HeaderContent extends React.Component {
   componentDidUpdate() {
     const { getMovie } = this.props;
 
-    const debouncedGetMovie = debounce(getMovie, 500, {
-      leading: true,
-      trailing: false,
-      maxWait: 1350,
+    const debouncedGetMovie = debounce(getMovie, 150, {
+      maxWait: 350,
     });
 
     this.onMovieSearch = (evt) => {
