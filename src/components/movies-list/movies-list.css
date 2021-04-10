@@ -10,12 +10,13 @@
 .movies {
   /* background-color: #fff; */
   /* margin: 36px; */
+  text-align: left;
 }
 
 .movies-list {
   display: grid;
   grid-template-columns: auto auto;
-  grid-template-rows: auto auto auto;
+  /* grid-template-rows: auto auto auto; */
   justify-content: space-around;
   gap: 36px;
   /* margin: 20px 0; */
@@ -47,7 +48,7 @@
 }
 
 .movie__name {
-  width: 132px;
+  /* width: 132px; */
   min-height: 28px;
   margin-top: 7px;
   margin-bottom: 7px;

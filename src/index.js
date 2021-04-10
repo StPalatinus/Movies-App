@@ -1,13 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Layout, Spin, Alert } from 'antd';
+import { Layout, Spin, Alert, Tabs } from 'antd';
 import 'antd/dist/antd.css';
 
 import './index.css';
-import HeaderContent from './components/header-content';
+// import HeaderContent from './components/header-content';
 import MoviesList from './components/movies-list';
 import FooterContent from './components/footer-content';
 import mapiService from './services/mapi-service';
+
+const debounce = require('lodash.debounce');
+
+const { TabPane } = Tabs;
 
 // import './components/header-content/header-content.css'
 // import './components/footer-content/footer-content.css'
@@ -132,6 +136,31 @@ class MoviesApp extends React.Component {
     this.getTopRated();
   }
 
+  componentDidUpdate() {
+    // const { getMovie } = this.props;
+
+    const debouncedGetMovie = debounce(this.getMovie, 150, {
+      maxWait: 350,
+    });
+
+    this.onMovieSearch = (evt) => {
+      let value;
+
+      evt.preventDefault();
+      if (evt.target.value) {
+        value = evt.target.value;
+      } else if (evt.target.firstChild) {
+        value = evt.target.firstChild.value;
+      }
+
+      if (value === '' || !value) {
+        return;
+      }
+
+      debouncedGetMovie(value, 1);
+    };
+  }
+
   render() {
     const { loading, error, errMessage, errDescription } = this.state;
 
@@ -159,15 +188,35 @@ class MoviesApp extends React.Component {
 
     return (
       <Layout id="appbody">
-        <Header className="header">
-          <HeaderContent getMovie={this.getMovie} />
-        </Header>
-        <Content className="main">
-          {errorMessage}
-          {spinner}
-          {content}
-        </Content>
-        <Footer>{footerContent}</Footer>
+        <section className="header-section">
+          <Tabs className="chose-display-variant" defaultActiveKey="2" centered onChange={() => {}}>
+            <TabPane tab="Search" key="1">
+              <Header className="header">
+                <form className="header__search-form" onSubmit={this.onMovieSearch}>
+                  <input
+                    className="header__search-form--search-field"
+                    placeholder="type to search..."
+                    onChange={this.onMovieSearch}
+                  />
+                </form>
+                {/* <HeaderContent 
+                getMovie={this.getMovie } 
+                moviesList={this.state.moviesList} 
+                onError={this.onError} 
+              /> */}
+              </Header>
+              <Content className="main">
+                {errorMessage}
+                {spinner}
+                {content}
+              </Content>
+              <Footer>{footerContent}</Footer>
+            </TabPane>
+            <TabPane tab="Rated" key="2">
+              <div>RATED</div>
+            </TabPane>
+          </Tabs>
+        </section>
       </Layout>
     );
   }
