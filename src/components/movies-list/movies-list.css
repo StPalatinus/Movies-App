@@ -27,11 +27,17 @@
 
 .movie {
   display: flex;
-  width: 454px;
+  width: 446px;
   height: 281px;
   box-sizing: border-box;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   /* margin: 16px; */
+  /* -webkit-filter: drop-shadow(3px 3px 3px 3px #eaeaea);
+  filter: drop-shadow(3px 3px 3px 3px #eaeaea); */
+  /* filter: drop-shadow(16px 16px 20px #353333); */
+  -webkit-box-shadow: 2px 2px 8px 2px rgba(34, 60, 80, 0.2);
+  -moz-box-shadow: 2px 2px 8px 2px rgba(34, 60, 80, 0.2);
+  box-shadow: 2px 2px 8px 2px rgba(34, 60, 80, 0.2);
 }
 
 .movie__poster {

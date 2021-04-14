@@ -8,6 +8,7 @@ import './index.css';
 import MoviesList from './components/movies-list';
 import FooterContent from './components/footer-content';
 import mapiService from './services/mapi-service';
+import RatedMovies from './components/rated-movies';
 
 const debounce = require('lodash.debounce');
 
@@ -24,6 +25,7 @@ class MoviesApp extends React.Component {
 
     this.state = {
       moviesList: [],
+      ratedList: [],
       selectedPage: 1,
       moviesCount: 20,
       loading: false,
@@ -31,6 +33,7 @@ class MoviesApp extends React.Component {
       errMessage: null,
       errDescription: null,
       currentMovie: 'reted',
+      sessionID: '0',
     };
 
     this.onError = (errMessage, errDescription) => {
@@ -129,11 +132,24 @@ class MoviesApp extends React.Component {
         selectedPage: page,
       }));
     };
+
+    this.getsessionID = async () => {
+      const guestsessionID = await mapiService.getGuestsessionID();
+
+      // console.log(guestsessionID);
+
+      this.setState(() => ({
+        sessionID: guestsessionID,
+      }));
+
+      return guestsessionID;
+    };
   }
 
   componentDidMount() {
     this.getGenreConfig();
     this.getTopRated();
+    this.getsessionID();
   }
 
   componentDidUpdate() {
@@ -172,7 +188,13 @@ class MoviesApp extends React.Component {
         <Spin />
       </div>
     ) : null;
-    const content = hasData ? <MoviesList moviesList={this.state.moviesList} onError={this.onError} /> : null;
+
+    const content = hasData ? (
+      <MoviesList moviesList={this.state.moviesList} onError={this.onError} sessionID={this.state.sessionID} />
+    ) : null;
+    const ratedMovies = hasData ? (
+      <MoviesList moviesList={this.state.ratedList} onError={this.onError} sessionID={this.state.sessionID} />
+    ) : null;
 
     const footerContent = error ? (
       <FooterContent />
@@ -199,11 +221,6 @@ class MoviesApp extends React.Component {
                     onChange={this.onMovieSearch}
                   />
                 </form>
-                {/* <HeaderContent 
-                getMovie={this.getMovie } 
-                moviesList={this.state.moviesList} 
-                onError={this.onError} 
-              /> */}
               </Header>
               <Content className="main">
                 {errorMessage}
@@ -213,7 +230,13 @@ class MoviesApp extends React.Component {
               <Footer>{footerContent}</Footer>
             </TabPane>
             <TabPane tab="Rated" key="2">
-              <div>RATED</div>
+              <RatedMovies sessionID={this.state.sessionID} getsessionID={this.getsessionID} />
+              <Content className="main">
+                {errorMessage}
+                {spinner}
+                {ratedMovies}
+              </Content>
+              <Footer>{footerContent}</Footer>
             </TabPane>
           </Tabs>
         </section>

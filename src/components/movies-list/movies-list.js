@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import format from 'date-fns/format';
 import { ru } from 'date-fns/locale';
 import 'antd/dist/antd.css';
-import { Image, Tag } from 'antd';
+import { Image, Tag, Rate } from 'antd';
 
 // import loadingImage from '../../img/loading128.png';
 import mapiService from '../../services/mapi-service';
@@ -15,6 +15,8 @@ export default class MoviesList extends React.Component {
   constructor(props) {
     super(props);
 
+    const { sessionID } = this.props;
+    console.log(sessionID);
     // MoviesList.defaultProps = {
 
     // }
@@ -76,6 +78,12 @@ export default class MoviesList extends React.Component {
         }
       });
     };
+
+    this.rateMovie = (rateValue, movieId, SID) => {
+      mapiService.rateMovie(rateValue * 2, movieId, SID);
+      // console.log(rateValue * 2);
+      // console.log(SID);
+    };
   }
 
   componentDidMount() {
@@ -88,7 +96,7 @@ export default class MoviesList extends React.Component {
   }
 
   render() {
-    const { moviesList } = this.props;
+    const { moviesList, sessionID } = this.props;
     // const { posterIsLoading } = this.state;
     const genreList = mapiService.getLocalGenreConfig();
 
@@ -121,6 +129,7 @@ export default class MoviesList extends React.Component {
       };
 
       return (
+        // <div className="movie" key={movie.id} onClick={() => {console.log("Movie clicked")}}></div>
         <div className="movie" key={movie.id}>
           <a href="#" className="movie__link">
             <Image
@@ -141,6 +150,16 @@ export default class MoviesList extends React.Component {
             <ReleaseDate />
             <div className="movie__genre">{attachedGenres}</div>
             <div className="movie__description--text">{movie.overview}</div>
+            <Rate
+              allowHalf
+              allowClear={false}
+              defaultValue={0}
+              // value={0}
+              // count={10}
+              onChange={(rateValue, movieId, SID) => {
+                this.rateMovie(rateValue, (movieId = movie.id), (SID = this.props.sessionID));
+              }}
+            />
           </div>
         </div>
       );
@@ -156,4 +175,5 @@ export default class MoviesList extends React.Component {
 
 MoviesList.propTypes = {
   moviesList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  sessionID: PropTypes.string.isRequired,
 };
