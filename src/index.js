@@ -144,17 +144,47 @@ class MoviesApp extends React.Component {
 
       return guestsessionID;
     };
+
+    // this.getUserRatedMovies = async (pageNum) => {
+    this.getUserRatedMovies = async (sessionId) => {
+      console.log(`sessionId = ${sessionId}`);
+      // let movies;
+      // let page;
+      // let moviesCount;
+
+      // this.setState(() => ({
+      //   // loading: true,
+      // //   selectedRatedPage: pageNum,
+      // }));
+
+      try {
+        // const baseResponse = await mapiService.getTopRated(pageNum);
+        const baseResponse = await mapiService.getUserRatedMovies(sessionId);
+        console.log(baseResponse);
+        // movies = baseResponse.results;
+        // page = baseResponse.page;
+        // moviesCount = baseResponse.totalPages;
+      } catch (err) {
+        this.onError('Network Error', 'Could not receive data from server');
+      }
+
+      // this.setState(() => ({
+      //   ratedList: movies,
+      //   loading: false,
+      // //   selectedRatedPage: page,
+      // //   ratedCount,
+      // }));
+    };
   }
 
   componentDidMount() {
     this.getGenreConfig();
     this.getTopRated();
     this.getsessionID();
+    // this.getUserRatedMovies(this.state.sessionID);
   }
 
   componentDidUpdate() {
-    // const { getMovie } = this.props;
-
     const debouncedGetMovie = debounce(this.getMovie, 150, {
       maxWait: 350,
     });
@@ -193,7 +223,12 @@ class MoviesApp extends React.Component {
       <MoviesList moviesList={this.state.moviesList} onError={this.onError} sessionID={this.state.sessionID} />
     ) : null;
     const ratedMovies = hasData ? (
-      <MoviesList moviesList={this.state.ratedList} onError={this.onError} sessionID={this.state.sessionID} />
+      <MoviesList
+        moviesList={this.state.ratedList}
+        onError={this.onError}
+        sessionID={this.state.sessionID}
+        getUserRatedMovies={this.getUserRatedMovies}
+      />
     ) : null;
 
     const footerContent = error ? (
@@ -230,7 +265,11 @@ class MoviesApp extends React.Component {
               <Footer>{footerContent}</Footer>
             </TabPane>
             <TabPane tab="Rated" key="2">
-              <RatedMovies sessionID={this.state.sessionID} getsessionID={this.getsessionID} />
+              <RatedMovies
+                sessionID={this.state.sessionID}
+                getsessionID={this.getsessionID}
+                getUserRatedMovies={this.getUserRatedMovies}
+              />
               <Content className="main">
                 {errorMessage}
                 {spinner}

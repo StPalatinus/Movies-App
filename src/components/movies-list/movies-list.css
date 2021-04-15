@@ -48,13 +48,17 @@
 }
 
 .movie__description {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: 100%;
   padding: 5px 5px 5px 0;
   margin-left: 20px;
 }
 
-.movie__name {
-  /* width: 132px; */
+.movie__description--name {
+  width: calc(100% - 37px);
   min-height: 28px;
   margin-top: 7px;
   margin-bottom: 7px;
@@ -114,4 +118,33 @@
   display: -webkit-box;
   -webkit-line-clamp: 6;
   -webkit-box-orient: vertical;
+}
+
+.movie__rate {
+  font-size: 16px;
+  padding-bottom: 7px;
+}
+
+.movie__vote_averege {
+  position: absolute;
+  right: 7px;
+  top: 7px;
+  width: 30px;
+  height: 30px;
+  /* border: 2px solid black; */
+  border-radius: 50%;
+}
+
+.movie__vote_averege--value {
+  position: absolute;
+  font-size: 16px;
+  top: 1px;
+}
+
+.movie__vote_averege--ten {
+  left: 1px;
+}
+
+.movie__vote_averege--zero {
+  left: 7.5px;
 }

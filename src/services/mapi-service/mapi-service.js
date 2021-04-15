@@ -180,8 +180,6 @@ class MapiService {
   }
 
   async rateMovie(rateValue, movieId, sessionID) {
-    // const url = `https://${BASE_URL}/authentication/guest_session/new?api_key=${API_KEY}`;
-    // const url =`https://${BASE_URL}/movie/${movieId}/rating?api_key=${API_KEY}&guest_session_id=${this.generateGuestsessionID()}`;
     const url = `https://${BASE_URL}/movie/${movieId}/rating?api_key=${API_KEY}&guest_session_id=${sessionID}`;
 
     const response = await fetch(url, {
@@ -202,7 +200,7 @@ class MapiService {
     return body;
   }
 
-  async getRatedMovies(sessionID) {
+  async getUserRatedMovies(sessionID) {
     const url = `https://${BASE_URL}/guest_session/${sessionID}/rated/movies?api_key=${API_KEY}&language=${LANGUAGE}&sort_by=${sortType}`;
 
     const response = await fetch(url);
@@ -212,7 +210,7 @@ class MapiService {
     }
 
     const body = await response.json();
-    return body.genres;
+    return body;
   }
 }
 

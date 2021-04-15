@@ -4,6 +4,7 @@ import format from 'date-fns/format';
 import { ru } from 'date-fns/locale';
 import 'antd/dist/antd.css';
 import { Image, Tag, Rate } from 'antd';
+import classNames from 'classnames/bind';
 
 // import loadingImage from '../../img/loading128.png';
 import mapiService from '../../services/mapi-service';
@@ -80,9 +81,7 @@ export default class MoviesList extends React.Component {
     };
 
     this.rateMovie = (rateValue, movieId, SID) => {
-      mapiService.rateMovie(rateValue * 2, movieId, SID);
-      // console.log(rateValue * 2);
-      // console.log(SID);
+      mapiService.rateMovie(rateValue, movieId, SID);
     };
   }
 
@@ -128,6 +127,50 @@ export default class MoviesList extends React.Component {
         );
       };
 
+      const movieVoteAverege = (voteAverage) => {
+        let color;
+
+        switch (true) {
+          case voteAverage <= 3:
+            color = '#E90000';
+            break;
+          case voteAverage <= 5:
+            color = '#E97E00';
+            break;
+          case voteAverage <= 7:
+            color = '#E9D100';
+            break;
+          case voteAverage > 7:
+            color = '#66E900';
+            break;
+          default:
+            color = 'black';
+        }
+
+        const voteAverageStyle = {
+          border: `2px solid ${color}`,
+        };
+
+        const voteAveregePositionCorrection = classNames({
+          'movie__vote_averege--value': true,
+          'movie__vote_averege--ten': voteAverage === 10,
+          'movie__vote_averege--zero': voteAverage === 0,
+        });
+
+        const correctedEverage = (everage) => {
+          if (everage === 0 || everage === 10) {
+            return everage;
+          }
+          return everage.toPrecision(2);
+        };
+
+        return (
+          <div className="movie__vote_averege" style={voteAverageStyle}>
+            <div className={voteAveregePositionCorrection}>{correctedEverage(voteAverage)}</div>
+          </div>
+        );
+      };
+
       return (
         // <div className="movie" key={movie.id} onClick={() => {console.log("Movie clicked")}}></div>
         <div className="movie" key={movie.id}>
@@ -146,16 +189,18 @@ export default class MoviesList extends React.Component {
             />
           </a>
           <div className="movie__description">
-            <h2 className="movie__name">{movie.original_title}</h2>
+            <h2 className="movie__description--name">{movie.original_title}</h2>
+            {movieVoteAverege(movie.vote_average)}
             <ReleaseDate />
             <div className="movie__genre">{attachedGenres}</div>
             <div className="movie__description--text">{movie.overview}</div>
             <Rate
+              className="movie__rate"
               allowHalf
               allowClear={false}
               defaultValue={0}
               // value={0}
-              // count={10}
+              count={10}
               onChange={(rateValue, movieId, SID) => {
                 this.rateMovie(rateValue, (movieId = movie.id), (SID = this.props.sessionID));
               }}

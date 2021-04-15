@@ -1,0 +1,74 @@
+{
+  "extends": [
+    "airbnb",
+    "airbnb/hooks",
+    "eslint-config-prettier",
+    "prettier",
+    "plugin:react-hooks/recommended"
+  ],
+  "plugins": [
+    "react",
+    "jsx-a11y"
+  ],
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest": true
+  },
+  "rules": {
+    "curly": ["error"],
+    "max-depth": ["warn", 4],
+    "id-length": ["warn", { "exceptions": ["i", "j"], "min": 2 }],
+    "no-lonely-if": ["error"],
+    "no-plusplus": ["off", {"allowForLoopAfterthoughts": true}],
+    "no-restricted-syntax": "off",
+    "class-methods-use-this": "off",
+    "jsx-a11y/href-no-hash": ["off"],
+    "jsx-a11y/anchor-is-valid": ["off"],
+    "jsx-a11y/label-has-associated-control": [ "error", {
+      "assert": "either"
+    }],
+    "react/state-in-constructor": ["off"],
+    "react/jsx-props-no-spreading": ["off"],
+    "react/static-property-placement": "off",
+    "react/destructuring-assignment": "off",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "prefer-destructuring": ["warn", {
+      "VariableDeclarator": {
+        "array": true,
+        "object": true
+      },
+      "AssignmentExpression": {
+        "array": false,
+        "object": false
+      }
+    }, {
+      "enforceForRenamedProperties": false
+    }],
+    "arrow-body-style": ["warn", "as-needed"],
+    "eol-last": "off",
+    "max-len": ["error", 120, { "ignoreUrls": true }],
+    "jsx-a11y/no-autofocus": [ 0, {
+      "ignoreNonDOM": true
+    }],
+    "react/prefer-stateless-function": ["off", { "ignorePureComponents": false }],
+    "no-param-reassign":"off"
+    // "no-param-reassign":["warn", { "props": true, "ignorePropertyModificationsFor": ["totodoRestoreddo"] }]
+    // "prefer-template": "off"
+    // "react/no-unused-state": "off"
+  },
+  "settings": {
+    "react": {
+      "pragma": "React",
+      "version": "detect"
+    }
+  }
+  // "parserOptions": {
+  //   "ecmaVersion": 6,
+  //   // "sourceType": "module",
+  //   "ecmaFeatures": {
+  //       "jsx": true
+  //   }
+  // }
+}
