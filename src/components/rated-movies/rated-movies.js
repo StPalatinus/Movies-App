@@ -40,8 +40,8 @@ export default class RatedMovies extends React.Component {
 
   render() {
     const TestComponent = <div>{`RATED MOVIES HERE! ${this.props.sessionID}`}</div>;
-    const ratedMovs = this.props.getUserRatedMovies(this.props.sessionID);
-    console.log(ratedMovs);
+    // const ratedMovs = this.props.getUserRatedMovies(this.props.sessionID);
+    // console.log(ratedMovs);
 
     return (
       <div>{TestComponent}</div>
@@ -52,6 +52,6 @@ export default class RatedMovies extends React.Component {
 
 RatedMovies.propTypes = {
   sessionID: PropTypes.string.isRequired,
-  getUserRatedMovies: PropTypes.func.isRequired,
+  // getUserRatedMovies: PropTypes.func.isRequired,
   // getsessionID: PropTypes.func.isRequired,
 };

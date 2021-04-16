@@ -16,8 +16,10 @@ export default class MoviesList extends React.Component {
   constructor(props) {
     super(props);
 
-    const { sessionID } = this.props;
-    console.log(sessionID);
+    const { getUserRatedMovies } = this.props;
+
+    // const { sessionID } = this.props;
+    // console.log(sessionID);
     // MoviesList.defaultProps = {
 
     // }
@@ -82,6 +84,22 @@ export default class MoviesList extends React.Component {
 
     this.rateMovie = (rateValue, movieId, SID) => {
       mapiService.rateMovie(rateValue, movieId, SID);
+      return rateValue;
+    };
+
+    this.getReadMovieRating = (movie, ratedMovies) => {
+      if (movie.rating) {
+        return movie.rating;
+      }
+
+      let res;
+      const rateListIDX = ratedMovies.findIndex((ratedID) => ratedID.id === movie.id);
+
+      if (rateListIDX !== -1) {
+        res = ratedMovies[rateListIDX].rating;
+      }
+
+      return res;
     };
   }
 
@@ -95,12 +113,14 @@ export default class MoviesList extends React.Component {
   }
 
   render() {
-    const { moviesList, sessionID } = this.props;
+    const { moviesList, sessionID, ratededList } = this.props;
     // const { posterIsLoading } = this.state;
     const genreList = mapiService.getLocalGenreConfig();
 
     const recievedMovies = moviesList.map((movie) => {
       let attachedGenres;
+      // console.log(movie);
+      // console.log(movie.rating);
 
       if (movie.genre_ids.length === 0) {
         attachedGenres = null;
@@ -198,11 +218,12 @@ export default class MoviesList extends React.Component {
               className="movie__rate"
               allowHalf
               allowClear={false}
-              defaultValue={0}
-              // value={0}
+              defaultValue={this.getReadMovieRating(movie, ratededList)}
+              // value={}
+              // value={movie.rating}
               count={10}
-              onChange={(rateValue, movieId, SID) => {
-                this.rateMovie(rateValue, (movieId = movie.id), (SID = this.props.sessionID));
+              onChange={(rateValue, movieId = movie.id, SID = this.props.sessionID) => {
+                this.rateMovie(rateValue, movieId, SID);
               }}
             />
           </div>
@@ -221,4 +242,6 @@ export default class MoviesList extends React.Component {
 MoviesList.propTypes = {
   moviesList: PropTypes.arrayOf(PropTypes.object).isRequired,
   sessionID: PropTypes.string.isRequired,
+  ratededList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  getUserRatedMovies: PropTypes.func.isRequired,
 };

@@ -196,12 +196,13 @@ class MapiService {
     }
 
     const body = await response.json();
-    console.log(body);
+    // console.log(body);
     return body;
   }
 
   async getUserRatedMovies(sessionID) {
-    const url = `https://${BASE_URL}/guest_session/${sessionID}/rated/movies?api_key=${API_KEY}&language=${LANGUAGE}&sort_by=${sortType}`;
+    const url = `https://${BASE_URL}/guest_session/${sessionID}/rated/movies?api_key=${API_KEY}&language=${LANGUAGE}&sort_by=${sortType}&page=1`;
+    // &page=${page || defaultPage}
 
     const response = await fetch(url);
 

@@ -27,13 +27,15 @@ class MoviesApp extends React.Component {
       moviesList: [],
       ratedList: [],
       selectedPage: 1,
+      selectedRatedPage: 1,
       moviesCount: 20,
+      ratedMoviesCount: 20,
       loading: false,
       error: false,
       errMessage: null,
       errDescription: null,
       currentMovie: 'reted',
-      sessionID: '0',
+      sessionID: null,
     };
 
     this.onError = (errMessage, errDescription) => {
@@ -134,7 +136,12 @@ class MoviesApp extends React.Component {
     };
 
     this.getsessionID = async () => {
-      const guestsessionID = await mapiService.getGuestsessionID();
+      let guestsessionID;
+      try {
+        guestsessionID = await mapiService.getGuestsessionID();
+      } catch (err) {
+        this.onError(err, 'Error', "Can't get session ID");
+      }
 
       // console.log(guestsessionID);
 
@@ -146,34 +153,39 @@ class MoviesApp extends React.Component {
     };
 
     // this.getUserRatedMovies = async (pageNum) => {
-    this.getUserRatedMovies = async (sessionId) => {
-      console.log(`sessionId = ${sessionId}`);
-      // let movies;
-      // let page;
-      // let moviesCount;
+    this.getUserRatedMovies = async () => {
+      const timerId = setInterval(async () => {
+        if (this.state.sessionID) {
+          clearInterval(timerId);
+          let movies;
+          let page;
+          let moviesCount;
 
-      // this.setState(() => ({
-      //   // loading: true,
-      // //   selectedRatedPage: pageNum,
-      // }));
+          this.setState(() => ({
+            loading: true,
+            //   selectedRatedPage: pageNum,
+          }));
 
-      try {
-        // const baseResponse = await mapiService.getTopRated(pageNum);
-        const baseResponse = await mapiService.getUserRatedMovies(sessionId);
-        console.log(baseResponse);
-        // movies = baseResponse.results;
-        // page = baseResponse.page;
-        // moviesCount = baseResponse.totalPages;
-      } catch (err) {
-        this.onError('Network Error', 'Could not receive data from server');
-      }
+          try {
+            // const baseResponse = await mapiService.getTopRated(pageNum);
+            const baseResponse = await mapiService.getUserRatedMovies(this.state.sessionID);
+            movies = baseResponse.results;
+            moviesCount = baseResponse.totalPages;
+            page = baseResponse.page;
+            // moviesCount = baseResponse.totalPages;
+          } catch (err) {
+            this.onError('Network Error', 'Could not receive data from server');
+          }
 
-      // this.setState(() => ({
-      //   ratedList: movies,
-      //   loading: false,
-      // //   selectedRatedPage: page,
-      // //   ratedCount,
-      // }));
+          this.setState(() => ({
+            ratedList: movies,
+            loading: false,
+            selectedRatedPage: page,
+            ratedMoviesCount: moviesCount,
+            //   ratedCount,
+          }));
+        }
+      }, 100);
     };
   }
 
@@ -181,7 +193,7 @@ class MoviesApp extends React.Component {
     this.getGenreConfig();
     this.getTopRated();
     this.getsessionID();
-    // this.getUserRatedMovies(this.state.sessionID);
+    this.getUserRatedMovies();
   }
 
   componentDidUpdate() {
@@ -220,7 +232,13 @@ class MoviesApp extends React.Component {
     ) : null;
 
     const content = hasData ? (
-      <MoviesList moviesList={this.state.moviesList} onError={this.onError} sessionID={this.state.sessionID} />
+      <MoviesList
+        moviesList={this.state.moviesList}
+        onError={this.onError}
+        ratededList={this.state.ratedList}
+        sessionID={this.state.sessionID}
+        getUserRatedMovies={this.getUserRatedMovies}
+      />
     ) : null;
     const ratedMovies = hasData ? (
       <MoviesList
@@ -231,13 +249,25 @@ class MoviesApp extends React.Component {
       />
     ) : null;
 
-    const footerContent = error ? (
+    const searchFooterContent = error ? (
       <FooterContent />
     ) : (
       <FooterContent
         moviesCount={this.state.moviesCount}
         moviesPerPage={20}
         selectedPage={this.state.selectedPage}
+        changePage={this.changePage}
+        getMovie={this.getMovie}
+      />
+    );
+
+    const ratedFooterContent = error ? (
+      <FooterContent />
+    ) : (
+      <FooterContent
+        moviesCount={this.state.ratedMoviesCount}
+        moviesPerPage={20}
+        selectedPage={this.state.selectedRatedPage}
         changePage={this.changePage}
         getMovie={this.getMovie}
       />
@@ -262,7 +292,7 @@ class MoviesApp extends React.Component {
                 {spinner}
                 {content}
               </Content>
-              <Footer>{footerContent}</Footer>
+              <Footer>{searchFooterContent}</Footer>
             </TabPane>
             <TabPane tab="Rated" key="2">
               <RatedMovies
@@ -275,7 +305,7 @@ class MoviesApp extends React.Component {
                 {spinner}
                 {ratedMovies}
               </Content>
-              <Footer>{footerContent}</Footer>
+              <Footer>{ratedFooterContent}</Footer>
             </TabPane>
           </Tabs>
         </section>
