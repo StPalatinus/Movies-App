@@ -12,7 +12,6 @@ import ErrorScreen from './components/error-screen';
 const debounce = require('lodash.debounce');
 
 const { TabPane } = Tabs;
-
 const { Header, Footer, Content } = Layout;
 
 class MoviesApp extends React.Component {
