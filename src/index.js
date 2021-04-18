@@ -4,18 +4,14 @@ import { Layout, Spin, Alert, Tabs } from 'antd';
 import 'antd/dist/antd.css';
 
 import './index.css';
-// import HeaderContent from './components/header-content';
 import MoviesList from './components/movies-list';
 import FooterContent from './components/footer-content';
 import mapiService from './services/mapi-service';
-import RatedMovies from './components/rated-movies';
+import ErrorScreen from './components/error-screen';
 
 const debounce = require('lodash.debounce');
 
 const { TabPane } = Tabs;
-
-// import './components/header-content/header-content.css'
-// import './components/footer-content/footer-content.css'
 
 const { Header, Footer, Content } = Layout;
 
@@ -35,11 +31,11 @@ class MoviesApp extends React.Component {
       errMessage: null,
       errDescription: null,
       currentMovie: 'reted',
-      sessionID: null,
+      sessionID: '0',
+      componentHasError: false,
     };
 
     this.onError = (errMessage, errDescription) => {
-      // console.log(`ERROR!${err}`);
       this.setState(() => ({
         error: true,
         loading: false,
@@ -68,12 +64,8 @@ class MoviesApp extends React.Component {
         moviesCount = baseResponse.totalPages;
 
         if (responseStatus === 200 && movies.length === 0) {
-          // console.log(responseStatus);
-          // console.log(movies.length);
           this.onError('Base error', 'Could not found requested resource');
         }
-
-        // console.log(movies);
       } catch (err) {
         this.onError('Network Error', 'Could not receive data from server');
       }
@@ -83,7 +75,6 @@ class MoviesApp extends React.Component {
         loading: false,
         selectedPage: page,
         moviesCount,
-        // currentMovie: movieTosearch,
       }));
     };
 
@@ -124,10 +115,6 @@ class MoviesApp extends React.Component {
       }
     };
 
-    // this.setPage = (page) => {
-    //   console.log(page);
-    // };
-
     this.changePage = (page) => {
       this.getMovie(this.state.currentMovie, page);
       this.setState(() => ({
@@ -143,8 +130,6 @@ class MoviesApp extends React.Component {
         this.onError(err, 'Error', "Can't get session ID");
       }
 
-      // console.log(guestsessionID);
-
       this.setState(() => ({
         sessionID: guestsessionID,
       }));
@@ -152,7 +137,6 @@ class MoviesApp extends React.Component {
       return guestsessionID;
     };
 
-    // this.getUserRatedMovies = async (pageNum) => {
     this.getUserRatedMovies = async () => {
       const timerId = setInterval(async () => {
         if (this.state.sessionID) {
@@ -167,12 +151,10 @@ class MoviesApp extends React.Component {
           }));
 
           try {
-            // const baseResponse = await mapiService.getTopRated(pageNum);
             const baseResponse = await mapiService.getUserRatedMovies(this.state.sessionID);
             movies = baseResponse.results;
             moviesCount = baseResponse.totalPages;
             page = baseResponse.page;
-            // moviesCount = baseResponse.totalPages;
           } catch (err) {
             this.onError('Network Error', 'Could not receive data from server');
           }
@@ -182,7 +164,6 @@ class MoviesApp extends React.Component {
             loading: false,
             selectedRatedPage: page,
             ratedMoviesCount: moviesCount,
-            //   ratedCount,
           }));
         }
       }, 100);
@@ -219,7 +200,15 @@ class MoviesApp extends React.Component {
     };
   }
 
+  componentDidCatch() {
+    this.setState({ componentHasError: true });
+  }
+
   render() {
+    if (this.state.componentHasError) {
+      return <ErrorScreen />;
+    }
+
     const { loading, error, errMessage, errDescription } = this.state;
 
     const hasData = !(loading || error);
@@ -295,11 +284,6 @@ class MoviesApp extends React.Component {
               <Footer>{searchFooterContent}</Footer>
             </TabPane>
             <TabPane tab="Rated" key="2">
-              <RatedMovies
-                sessionID={this.state.sessionID}
-                getsessionID={this.getsessionID}
-                getUserRatedMovies={this.getUserRatedMovies}
-              />
               <Content className="main">
                 {errorMessage}
                 {spinner}

@@ -1,0 +1,19 @@
+.error {
+  position: relative;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.error--image {
+  width: 100%;
+  height: auto;
+}
+
+.error--text {
+  position: absolute;
+  color: aliceblue;
+  width: 300px;
+  top: calc(50% - 44px);
+  left: calc(50% - 150px);
+  text-transform: capitalize;
+}

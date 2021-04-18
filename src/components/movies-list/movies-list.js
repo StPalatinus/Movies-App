@@ -5,10 +5,9 @@ import { ru } from 'date-fns/locale';
 import 'antd/dist/antd.css';
 import { Image, Tag, Rate } from 'antd';
 import classNames from 'classnames/bind';
+import ErrorScreen from '../error-screen';
 
-// import loadingImage from '../../img/loading128.png';
 import mapiService from '../../services/mapi-service';
-// import posterNone from '../../img/poster_none.jpg';
 
 import './movies-list.css';
 
@@ -16,23 +15,17 @@ export default class MoviesList extends React.Component {
   constructor(props) {
     super(props);
 
-    const { getUserRatedMovies } = this.props;
+    MoviesList.defaultProps = {
+      ratededList: [],
+    };
 
-    // const { sessionID } = this.props;
-    // console.log(sessionID);
-    // MoviesList.defaultProps = {
-
-    // }
-
-    // this.state = {
-    //   posterIsLoading: true,
-    // }
+    this.state = {
+      componentHasError: false,
+    };
 
     this.formatText = () => {
       const descriptionsArr = document.querySelectorAll('.movie__description--text');
-      // console.log(descriptionsArr);
       const maxlength = 200;
-      // let acc = 0;
 
       const reduceLength = (text, currentLength) => {
         if (!currentLength || currentLength <= 0) {
@@ -41,7 +34,6 @@ export default class MoviesList extends React.Component {
 
         const newTextLength = currentLength - 1;
         if (text[newTextLength] !== ' ') {
-          /* eslint no-unused-vars: "off" */
           return reduceLength(text, newTextLength);
         }
         return newTextLength;
@@ -59,8 +51,6 @@ export default class MoviesList extends React.Component {
         };
 
         let lessLength = maxlength - 10;
-
-        // if (countChildElementsHeight(description.parentElement.children) > description.parentElement.offsetHeight) {
 
         while (
           countChildElementsHeight(description.parentElement.children) > description.parentElement.offsetHeight ||
@@ -112,27 +102,27 @@ export default class MoviesList extends React.Component {
     this.formatText();
   }
 
+  componentDidCatch() {
+    this.setState({ componentHasError: true });
+  }
+
   render() {
-    const { moviesList, sessionID, ratededList } = this.props;
-    // const { posterIsLoading } = this.state;
+    if (this.state.componentHasError) {
+      return <ErrorScreen />;
+    }
+
+    const { moviesList, ratededList } = this.props;
     const genreList = mapiService.getLocalGenreConfig();
 
     const recievedMovies = moviesList.map((movie) => {
       let attachedGenres;
-      // console.log(movie);
-      // console.log(movie.rating);
 
       if (movie.genre_ids.length === 0) {
         attachedGenres = null;
       } else {
         attachedGenres = movie.genre_ids.map((attachedGenre) => {
           const idx = genreList.find((item) => item.id === attachedGenre);
-          return (
-            // <span className="movie__genre--name" key={attachedGenre}>
-            //   {idx.name}
-            // </span >
-            <Tag key={attachedGenre}>{idx.name}</Tag>
-          );
+          return <Tag key={attachedGenre}>{idx.name}</Tag>;
         });
       }
 
@@ -192,7 +182,6 @@ export default class MoviesList extends React.Component {
       };
 
       return (
-        // <div className="movie" key={movie.id} onClick={() => {console.log("Movie clicked")}}></div>
         <div className="movie" key={movie.id}>
           <a href="#" className="movie__link">
             <Image
@@ -203,9 +192,6 @@ export default class MoviesList extends React.Component {
                 src: mapiService.getPosterUrl(movie.poster_path, 'original'),
               }}
               fallback=""
-              // preview={{
-              //   src: posterIsLoading ? loadingImage : previewImage,
-              // }}
             />
           </a>
           <div className="movie__description">
@@ -219,8 +205,6 @@ export default class MoviesList extends React.Component {
               allowHalf
               allowClear={false}
               defaultValue={this.getReadMovieRating(movie, ratededList)}
-              // value={}
-              // value={movie.rating}
               count={10}
               onChange={(rateValue, movieId = movie.id, SID = this.props.sessionID) => {
                 this.rateMovie(rateValue, movieId, SID);
@@ -242,6 +226,5 @@ export default class MoviesList extends React.Component {
 MoviesList.propTypes = {
   moviesList: PropTypes.arrayOf(PropTypes.object).isRequired,
   sessionID: PropTypes.string.isRequired,
-  ratededList: PropTypes.arrayOf(PropTypes.object).isRequired,
-  getUserRatedMovies: PropTypes.func.isRequired,
+  ratededList: PropTypes.arrayOf(PropTypes.object),
 };
