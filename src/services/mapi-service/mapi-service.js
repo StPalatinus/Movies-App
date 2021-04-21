@@ -19,30 +19,22 @@ const createSearchURL = (key, urlBase, lang, movieToSearch, page) => {
   const url = `https://${urlBase}/search/movie?api_key=${key}&language=${lang}&query=${movieToSearch}&include_adult=false&page=${
     page || defaultPage
   }`;
-  // const url = `https://${urlBase}/search/movie?api_key=${key}&language=${lang}&query=${movieToSearch}&include_adult=false&page=${page || defaultPage}&${totalPages}`;
 
   return url;
 };
 
 const TOP_RATED = `https://${BASE_URL}/movie/top_rated?api_key=${API_KEY}&language=${LANGUAGE}`;
 
-// localStorage.clear("genres");
-
 class MapiService {
   async getMovie(movieToSearch, pageNum) {
     const searchUrl = createSearchURL(API_KEY, BASE_URL, LANGUAGE, movieToSearch, pageNum);
     const response = await fetch(searchUrl);
-    // console.log(response);
 
     if (!response.ok) {
       throw new Error(`Could not receive data from ${searchUrl} , received ${response.status}`);
     }
 
     const body = await response.json();
-    // console.log(body);
-    // console.log(body.page);
-    // console.log(body.total_results);
-
     const { results, page } = body;
     const totalPages = body.total_results;
     const responseStatus = response.status;
@@ -54,7 +46,6 @@ class MapiService {
     const response = await fetch(TOP_RATED);
 
     if (!response.ok) {
-      // return response.status;
       throw new Error(`Could not receive data from ${TOP_RATED} , received ${response.status}`);
     }
 
@@ -79,12 +70,10 @@ class MapiService {
 
     if (!response.ok) {
       throw new Error(`Could not receive data from ${url} , received ${response.status}`);
-      // return false;
     }
 
     const body = await response.json();
 
-    // localStorage.clear();
     localStorage.setItem('genres', JSON.stringify(body.genres));
 
     return body.genres;
@@ -98,19 +87,10 @@ class MapiService {
     const timerID = setInterval(() => {
       checkCount -= 1;
 
-      // const getConfig = () => JSON.parse(localStorage.getItem('genres'));
-
-      // console.log(checkCount);
-
       const retyConfig = () => {
         localConfig = getConfig();
       };
 
-      // if (localConfig) {
-      //   clearInterval(timerID)
-      // }
-
-      // console.log(checkCount);
       if (localConfig || checkCount <= 0) {
         clearInterval(timerID);
       }
@@ -121,21 +101,6 @@ class MapiService {
   }
 
   async generateGuestsessionID() {
-    // localStorage.clear("genres");
-    // const restoreOldSession = () => JSON.parse(localStorage.getItem('guestSession'));
-    // const hasSassion = restoreOldSession();
-
-    // if(hasSassion) {
-
-    //   const storedExpireDate = Date.parse(hasSassion.expires_at);
-    //   const currentTime = Date.now();
-
-    //   if(storedExpireDate > currentTime) {
-
-    //     return hasSassion.guest_session_id;
-    //   }
-    // }
-
     const url = `https://${BASE_URL}/authentication/guest_session/new?api_key=${API_KEY}`;
     const response = await fetch(url);
 
@@ -150,7 +115,6 @@ class MapiService {
   }
 
   async getGuestsessionID() {
-    // localStorage.clear("genres");
     const restoreOldSession = () => JSON.parse(localStorage.getItem('guestSession'));
     const hasSassion = restoreOldSession();
 
@@ -165,18 +129,6 @@ class MapiService {
     }
 
     return hasSassion.guest_session_id;
-
-    // const url = `https://${BASE_URL}/authentication/guest_session/new?api_key=${API_KEY}`;
-    // const response = await fetch(url);
-
-    // if (!response.ok) {
-    //   throw new Error(`Could not receive data from ${url} , received ${response.status}`);
-    // }
-
-    // const body = await response.json();
-    // localStorage.setItem('guestSession', JSON.stringify(body));
-
-    // return body.guest_session_id;
   }
 
   async rateMovie(rateValue, movieId, sessionID) {
@@ -187,7 +139,7 @@ class MapiService {
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
       },
-      // body: JSON.stringify(user)
+
       body: JSON.stringify({ value: rateValue }),
     });
 
@@ -196,13 +148,11 @@ class MapiService {
     }
 
     const body = await response.json();
-    // console.log(body);
     return body;
   }
 
   async getUserRatedMovies(sessionID) {
     const url = `https://${BASE_URL}/guest_session/${sessionID}/rated/movies?api_key=${API_KEY}&language=${LANGUAGE}&sort_by=${sortType}&page=1`;
-    // &page=${page || defaultPage}
 
     const response = await fetch(url);
 

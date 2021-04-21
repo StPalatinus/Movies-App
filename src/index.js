@@ -30,7 +30,7 @@ class MoviesApp extends React.Component {
       errMessage: null,
       errDescription: null,
       currentMovie: 'reted',
-      sessionID: '0',
+      sessionID: null,
       componentHasError: false,
     };
 
@@ -208,6 +208,7 @@ class MoviesApp extends React.Component {
       return <ErrorScreen />;
     }
 
+    console.log(this.state.sessionID);
     const { loading, error, errMessage, errDescription } = this.state;
 
     const hasData = !(loading || error);
