@@ -119,6 +119,10 @@ class MapiService {
     const hasSassion = restoreOldSession();
 
     if (!hasSassion) {
+      const result = await this.generateGuestsessionID();
+      return result;
+    }
+    if (hasSassion) {
       const storedExpireDate = Date.parse(hasSassion.expires_at);
       const currentTime = Date.now();
 
