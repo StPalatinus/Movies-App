@@ -208,7 +208,7 @@ class MoviesApp extends React.Component {
       return <ErrorScreen />;
     }
 
-    console.log(this.state.sessionID);
+    // console.log(this.state.sessionID);
     const { loading, error, errMessage, errDescription } = this.state;
 
     const hasData = !(loading || error);

@@ -17,6 +17,7 @@ export default class MoviesList extends React.Component {
 
     MoviesList.defaultProps = {
       ratededList: [],
+      sessionID: null,
     };
 
     this.state = {
@@ -215,9 +216,11 @@ export default class MoviesList extends React.Component {
       );
     });
 
+    const componentContent = this.props.sessionID ? recievedMovies : <div>NOW IS NULL</div>;
+
     return (
       <section className="movies">
-        <section className="movies-list">{recievedMovies}</section>
+        <section className="movies-list">{componentContent}</section>
       </section>
     );
   }
@@ -225,6 +228,6 @@ export default class MoviesList extends React.Component {
 
 MoviesList.propTypes = {
   moviesList: PropTypes.arrayOf(PropTypes.object).isRequired,
-  sessionID: PropTypes.string.isRequired,
+  sessionID: PropTypes.string,
   ratededList: PropTypes.arrayOf(PropTypes.object),
 };
