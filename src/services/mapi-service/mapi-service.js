@@ -16,14 +16,14 @@ const createSearchURL = (key, urlBase, lang, movieToSearch, page) => {
     return url;
   }
 
-  const url = `https://${urlBase}/search/movie?api_key=${key}&language=${lang}&query=${movieToSearch}&include_adult=false&page=${
+  const url = `https://${urlBase}/search/movie?api_key=${key}&language=${lang}&query=${movieToSearch}&includef_adult=false&page=${
     page || defaultPage
   }`;
 
   return url;
 };
 
-const TOP_RATED = `https://${BASE_URL}/movie/top_rated?api_key=${API_KEY}&language=${LANGUAGE}`;
+// const TOP_RATED = `https://${BASE_URL}/movie/top_rated?api_key=${API_KEY}&language=${LANGUAGE}`;
 
 class MapiService {
   async getMovie(movieToSearch, pageNum) {
@@ -35,22 +35,15 @@ class MapiService {
     }
 
     const body = await response.json();
-    const { results, page } = body;
-    const totalPages = body.total_results;
-    const responseStatus = response.status;
 
-    return { results, page, totalPages, responseStatus };
-  }
+    const responseResult = {
+      movies: body.results,
+      page: body.page,
+      totalPages: body.total_results,
+      responseStatus: response.status,
+    };
 
-  async getTopRated() {
-    const response = await fetch(TOP_RATED);
-
-    if (!response.ok) {
-      throw new Error(`Could not receive data from ${TOP_RATED} , received ${response.status}`);
-    }
-
-    const body = await response.json();
-    return body;
+    return responseResult;
   }
 
   getPosterUrl(posterPath, posterSize) {
@@ -165,7 +158,14 @@ class MapiService {
     }
 
     const body = await response.json();
-    return body;
+
+    const responseResult = {
+      movies: body.results,
+      page: body.total_pages,
+      moviesCount: body.page,
+    };
+
+    return responseResult;
   }
 }
 

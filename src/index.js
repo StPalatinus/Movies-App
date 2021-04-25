@@ -7,7 +7,9 @@ import './index.css';
 import MoviesList from './components/movies-list';
 import FooterContent from './components/footer-content';
 import mapiService from './services/mapi-service';
-import ErrorScreen from './components/error-screen';
+import ErrorBoundary from './components/error-boundry';
+import errorDescr from './assets/error-descriptions';
+import SearchForm from './components/search-form';
 
 const debounce = require('lodash.debounce');
 
@@ -31,7 +33,6 @@ class MoviesApp extends React.Component {
       errDescription: null,
       currentMovie: 'reted',
       sessionID: null,
-      componentHasError: false,
     };
 
     this.onError = (errMessage, errDescription) => {
@@ -44,10 +45,6 @@ class MoviesApp extends React.Component {
     };
 
     this.getMovie = async (movieTosearch, pageNum) => {
-      let movies;
-      let page;
-      let moviesCount;
-
       this.setState(() => ({
         loading: true,
         currentMovie: movieTosearch,
@@ -57,60 +54,27 @@ class MoviesApp extends React.Component {
 
       try {
         const baseResponse = await mapiService.getMovie(movieTosearch, pageNum);
-        const { responseStatus } = baseResponse;
-        movies = baseResponse.results;
-        page = baseResponse.page;
-        moviesCount = baseResponse.totalPages;
 
-        if (responseStatus === 200 && movies.length === 0) {
-          this.onError('Base error', 'Could not found requested resource');
+        if (baseResponse.responseStatus === 200 && baseResponse.movies.length === 0) {
+          this.onError(errorDescr.resourceNotFound.errorName, errorDescr.resourceNotFound.errorDescrioption);
         }
+
+        this.setState(() => ({
+          moviesList: baseResponse.movies,
+          loading: false,
+          selectedPage: baseResponse.page,
+          moviesCount: baseResponse.moviesCount,
+        }));
       } catch (err) {
-        this.onError('Network Error', 'Could not receive data from server');
+        this.onError(errorDescr.noData.errorName, errorDescr.noData.errorDescrioption);
       }
-
-      this.setState(() => ({
-        moviesList: movies,
-        loading: false,
-        selectedPage: page,
-        moviesCount,
-      }));
-    };
-
-    this.getTopRated = async (movieTosearch, pageNum) => {
-      let movies;
-      let page;
-      let moviesCount;
-
-      this.setState(() => ({
-        loading: true,
-        currentMovie: movieTosearch,
-        selectedPage: pageNum,
-      }));
-
-      try {
-        const baseResponse = await mapiService.getTopRated(movieTosearch, pageNum);
-        movies = baseResponse.results;
-        page = baseResponse.page;
-        moviesCount = baseResponse.totalPages;
-      } catch (err) {
-        this.onError('Network Error', 'Could not receive data from server');
-      }
-
-      this.setState(() => ({
-        moviesList: movies,
-        loading: false,
-        selectedPage: page,
-        moviesCount,
-        currentMovie: movieTosearch,
-      }));
     };
 
     this.getGenreConfig = async () => {
       try {
         await mapiService.downloadGenreConfig();
       } catch (err) {
-        this.onError(err, 'Network Error', "Can't get genre config");
+        this.onError(err, errorDescr.noGenreConfig.errorName, errorDescr.noGenreConfig.errorDescrioption);
       }
     };
 
@@ -126,7 +90,7 @@ class MoviesApp extends React.Component {
       try {
         guestsessionID = await mapiService.getGuestsessionID();
       } catch (err) {
-        this.onError(err, 'Error', "Can't get session ID");
+        this.onError(err, errorDescr.noSessionId.errorName, errorDescr.noSessionId.errorDescrioption);
       }
 
       this.setState(() => ({
@@ -140,9 +104,6 @@ class MoviesApp extends React.Component {
       const timerId = setInterval(async () => {
         if (this.state.sessionID) {
           clearInterval(timerId);
-          let movies;
-          let page;
-          let moviesCount;
 
           this.setState(() => ({
             loading: true,
@@ -151,33 +112,21 @@ class MoviesApp extends React.Component {
 
           try {
             const baseResponse = await mapiService.getUserRatedMovies(this.state.sessionID);
-            movies = baseResponse.results;
-            moviesCount = baseResponse.totalPages;
-            page = baseResponse.page;
-          } catch (err) {
-            this.onError('Network Error', 'Could not receive data from server');
-          }
 
-          this.setState(() => ({
-            ratedList: movies,
-            loading: false,
-            selectedRatedPage: page,
-            ratedMoviesCount: moviesCount,
-          }));
+            this.setState(() => ({
+              ratedList: baseResponse.movies,
+              loading: false,
+              selectedRatedPage: baseResponse.page,
+              ratedMoviesCount: baseResponse.moviesCount,
+            }));
+          } catch (err) {
+            this.onError(errorDescr.noData.errorName, errorDescr.noData.errorDescrioption);
+          }
         }
       }, 100);
     };
-  }
 
-  componentDidMount() {
-    this.getGenreConfig();
-    this.getTopRated();
-    this.getsessionID();
-    this.getUserRatedMovies();
-  }
-
-  componentDidUpdate() {
-    const debouncedGetMovie = debounce(this.getMovie, 150, {
+    const debouncedGetMovie = debounce(this.getMovie, 500, {
       maxWait: 350,
     });
 
@@ -199,28 +148,27 @@ class MoviesApp extends React.Component {
     };
   }
 
-  componentDidCatch() {
-    this.setState({ componentHasError: true });
+  componentDidMount() {
+    this.getGenreConfig();
+    this.getsessionID();
+    this.getUserRatedMovies();
   }
 
-  render() {
-    if (this.state.componentHasError) {
-      return <ErrorScreen />;
-    }
+  componentDidUpdate() {}
 
-    // console.log(this.state.sessionID);
+  render() {
     const { loading, error, errMessage, errDescription } = this.state;
 
     const hasData = !(loading || error);
 
-    const errorMessage = error ? <Alert message={errMessage} description={errDescription} type="error" /> : null;
-    const spinner = loading ? (
+    const errorMessage = <Alert message={errMessage} description={errDescription} type="error" />;
+    const spinner = (
       <div className="spin-wraper">
         <Spin />
       </div>
-    ) : null;
+    );
 
-    const content = hasData ? (
+    const searchMovies = hasData ? (
       <MoviesList
         moviesList={this.state.moviesList}
         onError={this.onError}
@@ -228,7 +176,9 @@ class MoviesApp extends React.Component {
         sessionID={this.state.sessionID}
         getUserRatedMovies={this.getUserRatedMovies}
       />
-    ) : null;
+    ) : (
+      spinner
+    );
     const ratedMovies = hasData ? (
       <MoviesList
         moviesList={this.state.ratedList}
@@ -236,7 +186,9 @@ class MoviesApp extends React.Component {
         sessionID={this.state.sessionID}
         getUserRatedMovies={this.getUserRatedMovies}
       />
-    ) : null;
+    ) : (
+      spinner
+    );
 
     const searchFooterContent = error ? (
       <FooterContent />
@@ -263,37 +215,25 @@ class MoviesApp extends React.Component {
     );
 
     return (
-      <Layout id="appbody">
-        <section className="header-section">
-          <Tabs className="chose-display-variant" defaultActiveKey="2" centered onChange={() => {}}>
-            <TabPane tab="Search" key="1">
-              <Header className="header">
-                <form className="header__search-form" onSubmit={this.onMovieSearch}>
-                  <input
-                    className="header__search-form--search-field"
-                    placeholder="type to search..."
-                    onChange={this.onMovieSearch}
-                  />
-                </form>
-              </Header>
-              <Content className="main">
-                {errorMessage}
-                {spinner}
-                {content}
-              </Content>
-              <Footer>{searchFooterContent}</Footer>
-            </TabPane>
-            <TabPane tab="Rated" key="2">
-              <Content className="main">
-                {errorMessage}
-                {spinner}
-                {ratedMovies}
-              </Content>
-              <Footer>{ratedFooterContent}</Footer>
-            </TabPane>
-          </Tabs>
-        </section>
-      </Layout>
+      <ErrorBoundary>
+        <Layout id="appbody">
+          <section className="header-section">
+            <Tabs className="chose-display-variant" defaultActiveKey="1" centered onChange={() => {}}>
+              <TabPane tab="Search" key="1">
+                <Header className="header">
+                  <SearchForm onMovieSearch={this.onMovieSearch} />
+                </Header>
+                <Content className="main">{error ? errorMessage : searchMovies}</Content>
+                <Footer>{searchFooterContent}</Footer>
+              </TabPane>
+              <TabPane tab="Rated" key="2">
+                <Content className="main">{error ? errorMessage : ratedMovies}</Content>
+                <Footer>{ratedFooterContent}</Footer>
+              </TabPane>
+            </Tabs>
+          </section>
+        </Layout>
+      </ErrorBoundary>
     );
   }
 }

@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import classNames from 'classnames/bind';
 import { Pagination } from 'antd';
-// import 'antd/dist/antd.css';
 
 import './footer-content.css';
 
@@ -19,23 +17,14 @@ class FooterContent extends React.Component {
       changePage: () => {},
     };
 
-    // this.state = {
-    //   selectedPage,
-    // };
-
     this.changePage = (page) => {
-      // console.log(page);
       changePage(page);
     };
   }
 
-  componentDidUpdate() {
-    // const { getMovie, selectedPage } = this.props;
-    // const searchField = document.querySelectorAll('.header__search-form--search-field');
-    // console.log(getMovie);
-    // console.log(selectedPage);
-    // console.log(searchField);
-  }
+  // componentDidUpdate() {
+
+  // }
 
   render() {
     const { moviesPerPage, moviesCount, selectedPage } = this.props;
@@ -61,7 +50,6 @@ FooterContent.propTypes = {
   moviesPerPage: PropTypes.number,
   selectedPage: PropTypes.number,
   changePage: PropTypes.func,
-  // getMovie: PropTypes.func.isRequired,
 };
 
 export default FooterContent;

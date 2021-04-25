@@ -1,26 +1,7 @@
 @font-face {
   font-family: Inter;
   src: url(./Fonts/Inter/static/Inter-Regular.ttf);
-  /* font-weight: normal; */
 }
-
-/* @font-face {
-  font-family: Inter;
-  src: url(./Fonts/Inter/static/Inter-Bold.ttf);
-  font-weight: bold;
-}
-
-@font-face {
-  font-family: Inter;
-  src: url(./Fonts/Inter/static/Inter-ExtraBold.ttf);
-  font-weight: bolder;
-}
-
-@font-face {
-  font-family: Inter;
-  src: url(./Fonts/Inter/static/Inter-ExtraLight.ttf);
-  font-weight: lighter;
-} */
 
 body {
   margin: 0;
@@ -41,18 +22,11 @@ body {
   margin: 20px 0;
   padding: 30px 50px;
   text-align: center;
-  /* border-radius: 4px; */
 }
 
 .ant-tabs-top {
-  /* width: 200px; */
   margin: 0 auto;
 }
-
-/* .ant-tabs-nav {
-  width: 200px;
-  margin: 0 auto;
-} */
 
 .ant-tabs-nav-wrap {
   width: 200px;
@@ -65,7 +39,6 @@ body {
   margin-right: 36px;
   height: auto;
   padding: 0;
-  /* box-sizing: content-box; */
 }
 
 .chose-display-variant {
@@ -114,7 +87,3 @@ body {
 
 .header__search-form--search-field {
 }
-
-/* code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-} */

@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import format from 'date-fns/format';
 import { ru } from 'date-fns/locale';
 import 'antd/dist/antd.css';
-import { Image, Tag, Rate } from 'antd';
-import classNames from 'classnames/bind';
-import ErrorScreen from '../error-screen';
+import { Image, Tag, Rate, Spin } from 'antd';
+import ErrorBoundary from '../error-boundry';
 
 import mapiService from '../../services/mapi-service';
 
@@ -18,10 +17,6 @@ export default class MoviesList extends React.Component {
     MoviesList.defaultProps = {
       ratededList: [],
       sessionID: null,
-    };
-
-    this.state = {
-      componentHasError: false,
     };
 
     this.formatText = () => {
@@ -103,15 +98,7 @@ export default class MoviesList extends React.Component {
     this.formatText();
   }
 
-  componentDidCatch() {
-    this.setState({ componentHasError: true });
-  }
-
   render() {
-    if (this.state.componentHasError) {
-      return <ErrorScreen />;
-    }
-
     const { moviesList, ratededList } = this.props;
     const genreList = mapiService.getLocalGenreConfig();
 
@@ -162,12 +149,6 @@ export default class MoviesList extends React.Component {
           border: `2px solid ${color}`,
         };
 
-        const voteAveregePositionCorrection = classNames({
-          'movie__vote_averege--value': true,
-          'movie__vote_averege--ten': voteAverage === 10,
-          'movie__vote_averege--zero': voteAverage === 0,
-        });
-
         const correctedEverage = (everage) => {
           if (everage === 0 || everage === 10) {
             return everage;
@@ -177,7 +158,7 @@ export default class MoviesList extends React.Component {
 
         return (
           <div className="movie__vote_averege" style={voteAverageStyle}>
-            <div className={voteAveregePositionCorrection}>{correctedEverage(voteAverage)}</div>
+            <div className="movie__vote_averege--value">{correctedEverage(voteAverage)}</div>
           </div>
         );
       };
@@ -216,12 +197,14 @@ export default class MoviesList extends React.Component {
       );
     });
 
-    const componentContent = this.props.sessionID ? recievedMovies : <div>NOW IS NULL</div>;
+    const componentContent = this.props.sessionID ? recievedMovies : <Spin />;
 
     return (
-      <section className="movies">
-        <section className="movies-list">{componentContent}</section>
-      </section>
+      <ErrorBoundary>
+        <section className="movies">
+          <section className="movies-list">{componentContent}</section>
+        </section>
+      </ErrorBoundary>
     );
   }
 }
