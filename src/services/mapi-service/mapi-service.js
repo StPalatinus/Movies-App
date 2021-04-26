@@ -1,14 +1,10 @@
 import posterNone from '../../img/posternone.jpg';
 
-const API_KEY = '82a13cf2a29a7a4cf5cdfa5f53773181';
+const API_KEY = process.env.REACT_APP_APY_KEY;
 const BASE_URL = 'api.themoviedb.org/3';
-// const language = "ru-RU";
 const LANGUAGE = 'en-US';
-// const posterSize = 'w185';
 const defaultPage = 1;
-// const totalPages = 8;
 const sortType = 'created_at.asc';
-// const sortType = 'created_at.desc';
 
 const createSearchURL = (key, urlBase, lang, movieToSearch, page) => {
   if (!movieToSearch) {
@@ -22,8 +18,6 @@ const createSearchURL = (key, urlBase, lang, movieToSearch, page) => {
 
   return url;
 };
-
-// const TOP_RATED = `https://${BASE_URL}/movie/top_rated?api_key=${API_KEY}&language=${LANGUAGE}`;
 
 class MapiService {
   async getMovie(movieToSearch, pageNum) {

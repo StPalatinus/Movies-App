@@ -9,6 +9,7 @@
     "antd": "^4.14.1",
     "classnames": "^2.2.6",
     "date-fns": "^2.16.1",
+    "dotenv": "^8.2.0",
     "lodash.debounce": "^4.0.8",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
