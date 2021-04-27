@@ -12,7 +12,7 @@ const createSearchURL = (key, urlBase, lang, movieToSearch, page) => {
     return url;
   }
 
-  const url = `https://${urlBase}/search/movie?api_key=${key}&language=${lang}&query=${movieToSearch}&includef_adult=false&page=${
+  const url = `https://${urlBase}/search/movie?api_key=${key}&language=${lang}&query=${movieToSearch}&include_adult=false&page=${
     page || defaultPage
   }`;
 
@@ -33,7 +33,7 @@ class MapiService {
     const responseResult = {
       movies: body.results,
       page: body.page,
-      totalPages: body.total_results,
+      totalMovies: body.total_results,
       responseStatus: response.status,
     };
 

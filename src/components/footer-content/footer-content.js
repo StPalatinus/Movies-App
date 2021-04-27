@@ -12,7 +12,7 @@ class FooterContent extends React.Component {
 
     FooterContent.defaultProps = {
       moviesCount: 6,
-      moviesPerPage: 6,
+      moviesPerPage: 10,
       selectedPage: 1,
       changePage: () => {},
     };
@@ -38,6 +38,7 @@ class FooterContent extends React.Component {
             current={selectedPage}
             defaultCurrent={1}
             defaultPageSize={moviesPerPage}
+            pageSizeOptions={[20, 50, 100]}
           />
         </div>
       </footer>

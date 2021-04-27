@@ -25,7 +25,7 @@ class MoviesApp extends React.Component {
       ratedList: [],
       selectedPage: 1,
       selectedRatedPage: 1,
-      moviesCount: 20,
+      moviesCount: 10,
       ratedMoviesCount: 20,
       loading: false,
       error: false,
@@ -63,7 +63,7 @@ class MoviesApp extends React.Component {
           moviesList: baseResponse.movies,
           loading: false,
           selectedPage: baseResponse.page,
-          moviesCount: baseResponse.moviesCount,
+          moviesCount: baseResponse.totalMovies,
         }));
       } catch (err) {
         this.onError(errorDescr.noData.errorName, errorDescr.noData.errorDescrioption);
@@ -127,7 +127,7 @@ class MoviesApp extends React.Component {
               ratedList: baseResponse.movies,
               loading: false,
               selectedRatedPage: baseResponse.page,
-              ratedMoviesCount: baseResponse.moviesCount,
+              ratedMoviesCount: baseResponse.totalMovies,
             }));
           } catch (err) {
             this.onError(errorDescr.noData.errorName, errorDescr.noData.errorDescrioption);

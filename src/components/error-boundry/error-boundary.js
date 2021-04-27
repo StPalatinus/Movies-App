@@ -12,12 +12,11 @@ class ErrorBoundary extends React.Component {
     };
   }
 
-  static getDerivedStateFromError() {
-    this.setState({ componentHasError: true });
-  }
+  // static getDerivedStateFromError() {
+  //   this.setState({ componentHasError: true });
+  // }
 
-  componentDidCatch(error) {
-    console.log(error);
+  componentDidCatch() {
     this.setState({ componentHasError: true });
   }
 
