@@ -17,6 +17,7 @@ export default class MoviesList extends React.Component {
     MoviesList.defaultProps = {
       ratededList: [],
       sessionID: null,
+      genres: [],
     };
 
     this.formatText = () => {
@@ -90,7 +91,7 @@ export default class MoviesList extends React.Component {
   }
 
   componentDidMount() {
-    mapiService.getLocalGenreConfig();
+    // mapiService.getLocalGenreConfig();
     this.formatText();
   }
 
@@ -100,7 +101,7 @@ export default class MoviesList extends React.Component {
 
   render() {
     const { moviesList, ratededList } = this.props;
-    const genreList = mapiService.getLocalGenreConfig();
+    const genreList = this.props.genres;
 
     const recievedMovies = moviesList.map((movie) => {
       let attachedGenres;
@@ -213,4 +214,5 @@ MoviesList.propTypes = {
   moviesList: PropTypes.arrayOf(PropTypes.object).isRequired,
   sessionID: PropTypes.string,
   ratededList: PropTypes.arrayOf(PropTypes.object),
+  genres: PropTypes.arrayOf(PropTypes.object),
 };

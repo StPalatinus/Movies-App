@@ -71,11 +71,21 @@ class MoviesApp extends React.Component {
     };
 
     this.getGenreConfig = async () => {
+      let genres;
       try {
-        await mapiService.downloadGenreConfig();
+        genres = await mapiService.getGenreConfig();
+
+        this.setState(() => ({
+          loading: true,
+        }));
       } catch (err) {
         this.onError(err, errorDescr.noGenreConfig.errorName, errorDescr.noGenreConfig.errorDescrioption);
       }
+
+      this.setState(() => ({
+        genres,
+        loading: false,
+      }));
     };
 
     this.changePage = (page) => {
@@ -175,6 +185,7 @@ class MoviesApp extends React.Component {
         ratededList={this.state.ratedList}
         sessionID={this.state.sessionID}
         getUserRatedMovies={this.getUserRatedMovies}
+        genres={this.state.genres}
       />
     ) : (
       spinner
@@ -185,6 +196,7 @@ class MoviesApp extends React.Component {
         onError={this.onError}
         sessionID={this.state.sessionID}
         getUserRatedMovies={this.getUserRatedMovies}
+        genres={this.state.genres}
       />
     ) : (
       spinner

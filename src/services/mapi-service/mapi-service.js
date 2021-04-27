@@ -1,4 +1,4 @@
-import posterNone from '../../img/posternone.jpg';
+import posterNone from '../../img/no_poster.svg';
 
 const API_KEY = process.env.REACT_APP_APY_KEY;
 const BASE_URL = 'api.themoviedb.org/3';
@@ -51,7 +51,7 @@ class MapiService {
     return posterURL;
   }
 
-  async downloadGenreConfig() {
+  async getGenreConfig() {
     const url = `https://${BASE_URL}/genre/movie/list?api_key=${API_KEY}&language=${LANGUAGE}`;
     const response = await fetch(url);
 
@@ -61,30 +61,7 @@ class MapiService {
 
     const body = await response.json();
 
-    localStorage.setItem('genres', JSON.stringify(body.genres));
-
     return body.genres;
-  }
-
-  getLocalGenreConfig() {
-    let checkCount = 3;
-    const getConfig = () => JSON.parse(localStorage.getItem('genres'));
-    let localConfig = getConfig();
-
-    const timerID = setInterval(() => {
-      checkCount -= 1;
-
-      const retyConfig = () => {
-        localConfig = getConfig();
-      };
-
-      if (localConfig || checkCount <= 0) {
-        clearInterval(timerID);
-      }
-
-      retyConfig();
-    }, 150);
-    return localConfig;
   }
 
   async generateGuestsessionID() {
