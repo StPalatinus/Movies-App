@@ -16,16 +16,6 @@ body {
   background-color: #fff;
   width: 1010px;
   margin: 0 auto;
-  min-height: 100vh;
-}
-
-.ant-layout {
-  min-height: 100vh;
-}
-
-.main {
-  min-height: 74vh;
-  min-height: 100%;
 }
 
 .spin-wraper {
@@ -42,14 +32,14 @@ body {
   width: 200px;
 }
 
-.header {
+/* .header {
   font-family: Inter, sans-serif;
   background-color: #ffffff;
   margin-left: 36px;
   margin-right: 36px;
   height: auto;
   padding: 0;
-}
+} */
 
 .chose-display-variant {
   padding-left: 0;
@@ -96,4 +86,27 @@ body {
 }
 
 .header__search-form--search-field {
+}
+
+.app-page {
+  /* display: flex;
+  flex-direction: column; */
+  /* height: 100%;
+  height: -webkit-fill-available; */
+}
+
+.header {
+  flex: 1 0 auto;
+  font-family: Inter, sans-serif;
+  background-color: #ffffff;
+  margin-left: 36px;
+  margin-right: 36px;
+  height: auto;
+  padding: 0;
+}
+
+.main {
+}
+
+.footer {
 }

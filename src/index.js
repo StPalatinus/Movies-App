@@ -231,14 +231,14 @@ class MoviesApp extends React.Component {
         <Layout id="appbody">
           <section className="header-section">
             <Tabs className="chose-display-variant" defaultActiveKey="1" centered onChange={this.getUserRatedMovies}>
-              <TabPane tab="Search" key="Search">
+              <TabPane tab="Search" key="Search" className="app-page">
                 <Header className="header">
                   <SearchForm onMovieSearch={this.onMovieSearch} />
                 </Header>
                 <Content className="main">{error ? errorMessage : searchMovies}</Content>
                 <Footer className="footer">{searchFooterContent}</Footer>
               </TabPane>
-              <TabPane tab="Rated" key="Rated" onChange={() => {}}>
+              <TabPane tab="Rated" key="Rated" className="app-page" onChange={() => {}}>
                 <Content className="main">{error ? errorMessage : ratedMovies}</Content>
                 <Footer className="footer">{ratedFooterContent}</Footer>
               </TabPane>
