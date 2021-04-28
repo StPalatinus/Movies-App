@@ -112,13 +112,12 @@ class MoviesApp extends React.Component {
 
     this.getUserRatedMovies = async () => {
       const timerId = setInterval(async () => {
+        this.setState(() => ({
+          loading: true,
+        }));
+
         if (this.state.sessionID) {
           clearInterval(timerId);
-
-          this.setState(() => ({
-            loading: true,
-            //   selectedRatedPage: pageNum,
-          }));
 
           try {
             const baseResponse = await mapiService.getUserRatedMovies(this.state.sessionID);
@@ -194,6 +193,7 @@ class MoviesApp extends React.Component {
       <MoviesList
         moviesList={this.state.ratedList}
         onError={this.onError}
+        ratededList={this.state.ratedList}
         sessionID={this.state.sessionID}
         getUserRatedMovies={this.getUserRatedMovies}
         genres={this.state.genres}
@@ -230,17 +230,17 @@ class MoviesApp extends React.Component {
       <ErrorBoundary>
         <Layout id="appbody">
           <section className="header-section">
-            <Tabs className="chose-display-variant" defaultActiveKey="1" centered onChange={() => {}}>
-              <TabPane tab="Search" key="1">
+            <Tabs className="chose-display-variant" defaultActiveKey="1" centered onChange={this.getUserRatedMovies}>
+              <TabPane tab="Search" key="Search">
                 <Header className="header">
                   <SearchForm onMovieSearch={this.onMovieSearch} />
                 </Header>
                 <Content className="main">{error ? errorMessage : searchMovies}</Content>
-                <Footer>{searchFooterContent}</Footer>
+                <Footer className="footer">{searchFooterContent}</Footer>
               </TabPane>
-              <TabPane tab="Rated" key="2">
+              <TabPane tab="Rated" key="Rated" onChange={() => {}}>
                 <Content className="main">{error ? errorMessage : ratedMovies}</Content>
-                <Footer>{ratedFooterContent}</Footer>
+                <Footer className="footer">{ratedFooterContent}</Footer>
               </TabPane>
             </Tabs>
           </section>

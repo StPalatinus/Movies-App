@@ -14,14 +14,25 @@ export default class MoviesList extends React.Component {
   constructor(props) {
     super(props);
 
+    this.descriptionTextRef = null;
+    this.descriptionTextRefsArr = [];
+    this.descriptionTextRefsArr.current = [];
+    this.addDescriptionTextRefToAttay = (element) => {
+      if (element && !this.descriptionTextRefsArr.current.includes(element)) {
+        this.descriptionTextRefsArr.current.push(element);
+      }
+    };
+
     MoviesList.defaultProps = {
       ratededList: [],
+      // ratedList: [],
       sessionID: null,
       genres: [],
+      getUserRatedMovies: () => {},
     };
 
     this.formatText = () => {
-      const descriptionsArr = document.querySelectorAll('.movie__description--text');
+      const descriptionsArr = this.descriptionTextRefsArr.current;
       const maxlength = 200;
 
       const reduceLength = (text, currentLength) => {
@@ -69,8 +80,13 @@ export default class MoviesList extends React.Component {
       });
     };
 
-    this.rateMovie = (rateValue, movieId, SID) => {
+    this.rateMovie = async (rateValue, movieId, SID) => {
       mapiService.rateMovie(rateValue, movieId, SID);
+
+      // setTimeout( async () => {
+      //   await this.props.getUserRatedMovies();
+      // },500);
+
       return rateValue;
     };
 
@@ -91,11 +107,11 @@ export default class MoviesList extends React.Component {
   }
 
   componentDidMount() {
-    // mapiService.getLocalGenreConfig();
     this.formatText();
   }
 
   componentDidUpdate() {
+    this.props.getUserRatedMovies();
     this.formatText();
   }
 
@@ -182,7 +198,9 @@ export default class MoviesList extends React.Component {
             {movieVoteAverege(movie.vote_average)}
             <ReleaseDate />
             <div className="movie__genre">{attachedGenres}</div>
-            <div className="movie__description--text">{movie.overview}</div>
+            <div className="movie__description--text" ref={this.addDescriptionTextRefToAttay}>
+              {movie.overview}
+            </div>
             <Rate
               className="movie__rate"
               allowHalf
@@ -212,7 +230,9 @@ export default class MoviesList extends React.Component {
 
 MoviesList.propTypes = {
   moviesList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  // ratedList: PropTypes.arrayOf(PropTypes.object),
   sessionID: PropTypes.string,
   ratededList: PropTypes.arrayOf(PropTypes.object),
   genres: PropTypes.arrayOf(PropTypes.object),
+  getUserRatedMovies: PropTypes.func,
 };

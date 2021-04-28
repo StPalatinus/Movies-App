@@ -16,6 +16,16 @@ body {
   background-color: #fff;
   width: 1010px;
   margin: 0 auto;
+  min-height: 100vh;
+}
+
+.ant-layout {
+  min-height: 100vh;
+}
+
+.main {
+  min-height: 74vh;
+  min-height: 100%;
 }
 
 .spin-wraper {

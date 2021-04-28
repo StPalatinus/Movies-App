@@ -22,10 +22,6 @@ class FooterContent extends React.Component {
     };
   }
 
-  // componentDidUpdate() {
-
-  // }
-
   render() {
     const { moviesPerPage, moviesCount, selectedPage } = this.props;
 
@@ -39,6 +35,7 @@ class FooterContent extends React.Component {
             defaultCurrent={1}
             defaultPageSize={moviesPerPage}
             pageSizeOptions={[20, 50, 100]}
+            simple
           />
         </div>
       </footer>
