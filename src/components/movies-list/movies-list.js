@@ -83,10 +83,6 @@ export default class MoviesList extends React.Component {
     this.rateMovie = async (rateValue, movieId, SID) => {
       mapiService.rateMovie(rateValue, movieId, SID);
 
-      // setTimeout( async () => {
-      //   await this.props.getUserRatedMovies();
-      // },500);
-
       return rateValue;
     };
 
@@ -104,9 +100,15 @@ export default class MoviesList extends React.Component {
 
       return res;
     };
+
+    this.isDesktop = () => {
+      const breakpoint480 = window.matchMedia('(min-width:600px)');
+      return breakpoint480.matches;
+    };
   }
 
   componentDidMount() {
+    this.isDesktop();
     this.formatText();
   }
 
@@ -180,8 +182,8 @@ export default class MoviesList extends React.Component {
         );
       };
 
-      return (
-        <div className="movie" key={movie.id}>
+      const renderedMoviesList = this.isDesktop() ? (
+        <>
           <a href="#" className="movie__link">
             <Image
               width={183}
@@ -212,6 +214,47 @@ export default class MoviesList extends React.Component {
               }}
             />
           </div>
+        </>
+      ) : (
+        <>
+          <a href="#" className="movie__link">
+            <Image
+              width={92}
+              alt={movie.original_title}
+              src={mapiService.getPosterUrl(movie.poster_path, 'w92')}
+              preview={{
+                src: mapiService.getPosterUrl(movie.poster_path, 'original'),
+              }}
+              fallback=""
+            />
+          </a>
+          <div className="movie__description">
+            <h2 className="movie__description--name">{movie.original_title}</h2>
+            {movieVoteAverege(movie.vote_average)}
+            <ReleaseDate />
+            <div className="movie__genre">{attachedGenres}</div>
+          </div>
+          <div className="movie__description-description">
+            <div className="movie__description--text" ref={this.addDescriptionTextRefToAttay}>
+              {movie.overview}
+            </div>
+            <Rate
+              className="movie__rate"
+              allowHalf
+              allowClear={false}
+              defaultValue={this.getReadMovieRating(movie, ratededList)}
+              count={10}
+              onChange={(rateValue, movieId = movie.id, SID = this.props.sessionID) => {
+                this.rateMovie(rateValue, movieId, SID);
+              }}
+            />
+          </div>
+        </>
+      );
+
+      return (
+        <div className="movie" key={movie.id}>
+          {renderedMoviesList}
         </div>
       );
     });

@@ -11,14 +11,6 @@
   text-align: left;
 }
 
-.movies-list {
-  display: grid;
-  grid-template-columns: auto auto;
-  justify-content: space-around;
-  gap: 36px;
-  padding: 30px 50px;
-}
-
 .movie {
   display: flex;
   /* width: 446px; */
@@ -37,13 +29,29 @@
 }
 
 .movie__description {
-  position: relative;
+  grid-column: 2;
+  grid-row: 1;
   display: flex;
+  /* display: none; */
+  position: relative;
+  /* right: 10px; */
+  /* z-index: 10; */
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
   padding: 5px 5px 5px 0;
-  margin-left: 20px;
+  padding-left: 20px;
+  /* background-color: rgba(255, 255, 255, 0.8); */
+}
+
+.movie__description-description {
+  position: relative;
+  right: 102px;
+  grid-column: 2;
+  grid-row: 2;
+  width: calc(100% + 92px);
+  padding: 5px 5px 5px 0;
+  padding-left: 20px;
 }
 
 .movie__description--name {
@@ -109,7 +117,7 @@
 }
 
 .movie__rate {
-  font-size: 16px;
+  font-size: 12px;
   padding-bottom: 7px;
   margin: 0 auto;
 }
@@ -135,34 +143,48 @@
 .ant-image {
   padding: 0.2px;
   width: 100%;
-  height: 100%;
-  /* height: auto; */
+  height: auto;
   overflow: hidden;
 }
 
 /* .ant-image-img {
-  width: 50%;
+  width: 92px;
   height: auto;
 } */
 
 .movie__link {
+  grid-column: 1;
+  grid-row: 1;
+  /* display: inline-block; */
+  width: calc(100% - 92px);
   /* height: 50%; */
+  /* margin: 0 auto; */
 }
 
 /* @media only screen and (min-width: 100px) { */
 .movie {
+  display: grid;
+  grid-template-columns: auto auto;
   width: 100%;
 }
 
 .movies-list {
+  display: grid;
   grid-template-columns: auto;
+  justify-content: space-around;
+  gap: 36px;
+  padding: 30px 50px;
 }
-/* } */
 
 @media only screen and (min-width: 650px) {
   .ant-image-img {
-    width: 100%;
+    width: 183px;
     height: auto;
+  }
+
+  .movie__description {
+    display: flex;
+    flex-direction: column;
   }
 
   /* .ant-image {
@@ -172,6 +194,13 @@
 
   .movie__link {
     height: 100%;
+    width: auto;
+  }
+
+  .movie__rate {
+    font-size: 16px;
+    /* padding-bottom: 7px;
+    margin: 0 auto; */
   }
 }
 
@@ -189,14 +218,18 @@
     width: 100%;
     height: 100%;
   } */
-}
 
-@media only screen and (min-width: 1440px) {
   .movie {
     width: 446px;
   }
 
   .movies-list {
     grid-template-columns: auto auto;
+  }
+}
+
+@media only screen and (min-width: 1440px) {
+  .movie {
+    width: 446px;
   }
 }
