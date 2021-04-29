@@ -10,11 +10,12 @@ body {
   font-size: 12px;
   line-height: 22px;
   font-weight: 400;
+  overflow-x: hidden;
 }
 
 #moviesapp {
   background-color: #fff;
-  width: 1010px;
+  /* width: 1010px; */
   margin: 0 auto;
 }
 
@@ -31,15 +32,6 @@ body {
 .ant-tabs-nav-wrap {
   width: 200px;
 }
-
-/* .header {
-  font-family: Inter, sans-serif;
-  background-color: #ffffff;
-  margin-left: 36px;
-  margin-right: 36px;
-  height: auto;
-  padding: 0;
-} */
 
 .chose-display-variant {
   padding-left: 0;
@@ -95,18 +87,59 @@ body {
   height: -webkit-fill-available; */
 }
 
-.header {
-  flex: 1 0 auto;
+.moviesapp {
+  min-height: 100%;
+}
+
+.ant-layout {
+  min-height: 100vh;
+}
+
+.ant-tabs-nav {
+  height: 46px;
+}
+
+.ant-tabs-content-holder {
+  min-height: calc(100vh - 62px);
+}
+
+.header-section {
+  min-height: 100vh;
+}
+
+.ant-tabs {
+  min-height: 100vh;
+}
+
+.ant-tabs-content {
+  min-height: calc(100vh - 62px);
+}
+
+.header,
+.ant-layout-header {
+  height: 44px;
   font-family: Inter, sans-serif;
   background-color: #ffffff;
   margin-left: 36px;
   margin-right: 36px;
-  height: auto;
   padding: 0;
 }
 
-.main {
+.main,
+.ant-layout-content {
+  min-height: calc(100vh - 250px);
 }
 
-.footer {
+.footer,
+.ant-layout-footer {
+  box-sizing: border-box;
+  height: 72px;
+}
+
+@media only screen and (min-width: 1024px) {
+  #moviesapp {
+    background-color: #fff;
+    width: 1010px;
+    margin: 0 auto;
+  }
 }
