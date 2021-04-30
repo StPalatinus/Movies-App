@@ -149,7 +149,6 @@
   grid-column: 1;
   grid-row: 1;
   width: calc(100% - 92px);
-  padding: 2px;
 }
 
 .movie {
