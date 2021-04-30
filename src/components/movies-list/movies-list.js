@@ -14,7 +14,6 @@ export default class MoviesList extends React.Component {
   constructor(props) {
     super(props);
 
-    this.movieRef = React.createRef();
     this.descriptionTextRef = null;
     this.descriptionTextRefsArr = [];
     this.descriptionTextRefsArr.current = [];
@@ -33,7 +32,7 @@ export default class MoviesList extends React.Component {
 
     this.formatText = () => {
       const descriptionsArr = this.descriptionTextRefsArr.current;
-      const maxlength = 200;
+      const maxlength = 100;
 
       const reduceLength = (text, currentLength) => {
         if (!currentLength || currentLength <= 0) {
@@ -41,7 +40,8 @@ export default class MoviesList extends React.Component {
         }
 
         const newTextLength = currentLength - 1;
-        if (text[newTextLength] !== ' ') {
+
+        if (text[newTextLength] !== ' ' && text[newTextLength] !== '') {
           return reduceLength(text, newTextLength);
         }
         return newTextLength;
@@ -55,7 +55,8 @@ export default class MoviesList extends React.Component {
             acc += child.scrollHeight;
           }
 
-          return acc;
+          // console.log(acc);
+          return acc + 20;
         };
 
         let lessLength = maxlength - 10;
@@ -190,7 +191,7 @@ export default class MoviesList extends React.Component {
               fallback=""
             />
           </a>
-          <div className="movie__description" ref={this.movieRef}>
+          <div className="movie__description">
             <h2 className="movie__description--name">{movie.original_title}</h2>
             {movieVoteAverege(movie.vote_average)}
             <ReleaseDate />
@@ -223,7 +224,7 @@ export default class MoviesList extends React.Component {
               fallback=""
             />
           </a>
-          <div className="movie__description" ref={this.movieRef}>
+          <div className="movie__description">
             <h2 className="movie__description--name">{movie.original_title}</h2>
             {movieVoteAverege(movie.vote_average)}
             <ReleaseDate />
