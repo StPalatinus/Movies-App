@@ -3,7 +3,7 @@
   src: url(./Fonts/Inter/static/Inter-Regular.ttf);
 }
 
-body {
+.body {
   margin: 0;
   background-color: #e5e5e5;
   font-family: Inter, sans-serif;
@@ -13,10 +13,8 @@ body {
   overflow-x: hidden;
 }
 
-#moviesapp {
+.ant-layout {
   background-color: #fff;
-  /* width: 1010px; */
-  margin: 0 auto;
 }
 
 .spin-wraper {
@@ -81,13 +79,11 @@ body {
 }
 
 .app-page {
-  /* display: flex;
-  flex-direction: column; */
-  /* height: 100%;
-  height: -webkit-fill-available; */
 }
 
 .moviesapp {
+  background-color: #fff;
+  margin: 0 auto;
   min-height: 100%;
 }
 
@@ -137,9 +133,14 @@ body {
 }
 
 @media only screen and (min-width: 1024px) {
-  #moviesapp {
+  .moviesapp {
     background-color: #fff;
     width: 1010px;
     margin: 0 auto;
   }
+}
+.moviesapp {
+  background-color: #fff;
+  margin: 0 auto;
+  min-height: 100%;
 }

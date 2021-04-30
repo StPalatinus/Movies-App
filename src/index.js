@@ -21,6 +21,7 @@ class MoviesApp extends React.Component {
     super();
 
     this.state = {
+      isDesktop: false,
       moviesList: [],
       ratedList: [],
       selectedPage: 1,
@@ -155,9 +156,21 @@ class MoviesApp extends React.Component {
 
       debouncedGetMovie(value, 1);
     };
+
+    const breakpoint650 = window.matchMedia('(min-width:650px)');
+    this.mobOrDesktop = () => {
+      if (breakpoint650.matches !== this.state.isDesktop) {
+        this.setState(() => ({
+          isDesktop: breakpoint650.matches,
+        }));
+      }
+    };
+
+    breakpoint650.addListener(this.mobOrDesktop);
   }
 
   componentDidMount() {
+    this.mobOrDesktop();
     this.getGenreConfig();
     this.getsessionID();
     this.getUserRatedMovies();
@@ -185,6 +198,7 @@ class MoviesApp extends React.Component {
         sessionID={this.state.sessionID}
         getUserRatedMovies={this.getUserRatedMovies}
         genres={this.state.genres}
+        isDesktop={this.state.isDesktop}
       />
     ) : (
       spinner
@@ -197,6 +211,7 @@ class MoviesApp extends React.Component {
         sessionID={this.state.sessionID}
         getUserRatedMovies={this.getUserRatedMovies}
         genres={this.state.genres}
+        isDesktop={this.state.isDesktop}
       />
     ) : (
       spinner

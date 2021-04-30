@@ -14,10 +14,11 @@ export default class MoviesList extends React.Component {
   constructor(props) {
     super(props);
 
+    this.movieRef = React.createRef();
     this.descriptionTextRef = null;
     this.descriptionTextRefsArr = [];
     this.descriptionTextRefsArr.current = [];
-    this.addDescriptionTextRefToAttay = (element) => {
+    this.addDescriptionTextRefToArray = (element) => {
       if (element && !this.descriptionTextRefsArr.current.includes(element)) {
         this.descriptionTextRefsArr.current.push(element);
       }
@@ -25,7 +26,6 @@ export default class MoviesList extends React.Component {
 
     MoviesList.defaultProps = {
       ratededList: [],
-      // ratedList: [],
       sessionID: null,
       genres: [],
       getUserRatedMovies: () => {},
@@ -100,15 +100,10 @@ export default class MoviesList extends React.Component {
 
       return res;
     };
-
-    this.isDesktop = () => {
-      const breakpoint480 = window.matchMedia('(min-width:600px)');
-      return breakpoint480.matches;
-    };
   }
 
   componentDidMount() {
-    this.isDesktop();
+    this.addDescriptionTextRefToArray();
     this.formatText();
   }
 
@@ -182,11 +177,11 @@ export default class MoviesList extends React.Component {
         );
       };
 
-      const renderedMoviesList = this.isDesktop() ? (
-        <>
+      const preparedMoviesList = this.props.isDesktop ? (
+        <div className="movie" key={movie.id}>
           <a href="#" className="movie__link">
             <Image
-              width={183}
+              width={185}
               alt={movie.original_title}
               src={mapiService.getPosterUrl(movie.poster_path, 'w185')}
               preview={{
@@ -195,12 +190,12 @@ export default class MoviesList extends React.Component {
               fallback=""
             />
           </a>
-          <div className="movie__description">
+          <div className="movie__description" ref={this.movieRef}>
             <h2 className="movie__description--name">{movie.original_title}</h2>
             {movieVoteAverege(movie.vote_average)}
             <ReleaseDate />
             <div className="movie__genre">{attachedGenres}</div>
-            <div className="movie__description--text" ref={this.addDescriptionTextRefToAttay}>
+            <div className="movie__description--text" ref={this.addDescriptionTextRefToArray}>
               {movie.overview}
             </div>
             <Rate
@@ -214,9 +209,9 @@ export default class MoviesList extends React.Component {
               }}
             />
           </div>
-        </>
+        </div>
       ) : (
-        <>
+        <div className="movie" key={movie.id}>
           <a href="#" className="movie__link">
             <Image
               width={92}
@@ -228,14 +223,12 @@ export default class MoviesList extends React.Component {
               fallback=""
             />
           </a>
-          <div className="movie__description">
+          <div className="movie__description" ref={this.movieRef}>
             <h2 className="movie__description--name">{movie.original_title}</h2>
             {movieVoteAverege(movie.vote_average)}
             <ReleaseDate />
             <div className="movie__genre">{attachedGenres}</div>
-          </div>
-          <div className="movie__description-description">
-            <div className="movie__description--text" ref={this.addDescriptionTextRefToAttay}>
+            <div className="movie__description--text" ref={this.addDescriptionTextRefToArray}>
               {movie.overview}
             </div>
             <Rate
@@ -249,14 +242,10 @@ export default class MoviesList extends React.Component {
               }}
             />
           </div>
-        </>
-      );
-
-      return (
-        <div className="movie" key={movie.id}>
-          {renderedMoviesList}
         </div>
       );
+
+      return <React.Fragment key={movie.id}>{preparedMoviesList}</React.Fragment>;
     });
 
     const componentContent = this.props.sessionID ? recievedMovies : <Spin />;
@@ -273,9 +262,9 @@ export default class MoviesList extends React.Component {
 
 MoviesList.propTypes = {
   moviesList: PropTypes.arrayOf(PropTypes.object).isRequired,
-  // ratedList: PropTypes.arrayOf(PropTypes.object),
   sessionID: PropTypes.string,
   ratededList: PropTypes.arrayOf(PropTypes.object),
   genres: PropTypes.arrayOf(PropTypes.object),
   getUserRatedMovies: PropTypes.func,
+  isDesktop: PropTypes.bool.isRequired,
 };
